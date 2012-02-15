@@ -1,0 +1,119 @@
+---
+layout: default
+title: Asynchronous DNS lookups using libeio and libev
+description: Asynchronous DNS lookups using libeio and libev.
+---
+<h1>Asynchronous DNS lookups using libeio and libev</h1>
+<p>Here's a simple example that uses a thread pool from <a href="http://software.schmorp.de/pkg/libeio.html">libeio</a> inside <a href="http://software.schmorp.de/pkg/libev.html">libev</a>'s event loop to do asynchronous DNS lookups using the blocking <code>getaddrinfo</code> function. A timer in the loop should intersperse <code>tick</code>s in the program's output as the DNS lookups are in progress.</p>
+<pre class="prettyprint">#include &lt;ev.h>
+#include &lt;eio.h>
+#include &lt;string.h>
+#include &lt;stdio.h>
+
+#include &lt;sys/types.h>
+#include &lt;sys/socket.h>
+#include &lt;netdb.h>
+#include &lt;arpa/inet.h>
+
+// To compile: cc &lt;file> -leio -lev
+
+typedef struct {
+  const char *host;
+  struct addrinfo *address;
+} resolve_t;
+
+struct ev_loop *loop;
+ev_idle idle_watcher;
+ev_async async_watcher;
+ev_timer timer_watcher;
+
+// This is only executed when eio_poll returns -1
+void idle_cb(struct ev_loop *loop, ev_idle *w, int revents) {
+  if (eio_poll() != -1)
+    ev_idle_stop(loop, w);
+}
+
+void async_cb(struct ev_loop *loop, ev_async *w, int revents) {
+  if (eio_poll() == -1) {
+    ev_idle_start(loop, &amp;idle_watcher);
+  } else if (!eio_nreqs()) {
+    ev_timer_stop(loop, &amp;timer_watcher);
+    ev_async_stop(loop, &amp;async_watcher);
+  }
+}
+
+// Need to call eio_poll, but not from this function.
+// Signal async_watcher instead and call from there.
+void want_poll(void) {
+  ev_async_send(loop, &amp;async_watcher);
+}
+
+int on_resolve(eio_req *req) {
+  char ipstr[INET6_ADDRSTRLEN];
+  resolve_t *r = (resolve_t *)req->data;
+  struct addrinfo *p;
+  
+  for (p = r->address; p; p = p->ai_next) {
+    void *addr;
+
+    if (p->ai_family == AF_INET) { // IPv4
+      struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+      addr = &amp;ipv4->sin_addr;
+    } else { // IPv6
+      struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;
+      addr = &amp;ipv6->sin6_addr;
+    }
+
+    inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
+    printf("  %s: %s\n", r->host, ipstr);
+  }
+  
+  freeaddrinfo(r->address);
+  return 0;
+}
+
+void resolve(eio_req *req) {
+  resolve_t *r = (resolve_t *)req->data;
+  struct addrinfo hints;
+
+  memset(&amp;hints, 0, sizeof hints);
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+
+  printf("resolving %s...\n", r->host);
+  req->result = getaddrinfo(r->host, "80", &amp;hints, &amp;r->address);
+}
+
+void tick(struct ev_loop *loop, ev_timer *w, int revents) {
+  puts("tick");
+  ev_timer_again(loop, w);
+}
+
+int main(int argc, char *argv[]) {
+  
+  if (argc &lt; 2) {
+    fprintf(stderr, "  Usage: %s host ...\n", argv[0]);
+    return 1;
+  }
+  
+  loop = EV_DEFAULT;
+  resolve_t r[argc-1];
+  
+  ev_idle_init(&amp;idle_watcher, idle_cb);
+  ev_async_init(&amp;async_watcher, async_cb);
+  ev_timer_init(&amp;timer_watcher, tick, 0., .001);
+  eio_init(want_poll, 0);
+  
+  ev_async_start(loop, &amp;async_watcher);
+  ev_timer_again(loop, &amp;timer_watcher);
+  
+  int i = 0;
+  while (i &lt; argc-1) {
+    r[i].host = argv[i+1];
+    eio_custom(resolve, 0, on_resolve, r+i++);
+  }
+  
+  ev_run(loop, 0);
+  
+  return 0;
+}</pre>

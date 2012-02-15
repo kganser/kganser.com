@@ -1,0 +1,52 @@
+---
+layout: default
+title: kerneljs
+description: A minimal evented javascript environment for the server.
+---
+<h1>kerneljs</h1>
+<p>Kerneljs is a minimalist javascript interpreter with a nonblocking API in the style of the browser and <a href="http://nodejs.org">nodejs</a>. It began as an exercise exploring the nodejs code base, and out of frustration with some of its design choices, including:</p>
+<ul>
+  <li>Blocking <code>requires</code> and the <a href="http://www.commonjs.org/">commonjs</a> API, which I wanted to avoid.</li>
+  <li>The <code>Buffer</code> object, which is intended to handle raw byte streams. As javascript was meant to work only on unicode, I wanted to leave binary data out.</li>
+  <li>One-to-one mapping (more or less) of C library functions to javascript, which helps explain the need for <code>Buffer</code> objects. I wanted true abstraction between C and javascript.</li>
+  <li>Filesystem I/O, which is complicated and better suited to a static file server.</li>
+  <li>Widespread use of "underscore private" variables, which I wanted to avoid.</li>
+</ul>
+<p>The goal was to have a sufficient subset of nodejs with only three major components:</p>
+<ul>
+  <li>The <a href="http://code.google.com/p/v8/">V8</a> javascript engine</li>
+  <li>The event loop (using <a href="http://libev.schmorp.de/">libev</a>)</li>
+<li>TCP sockets</li>
+</ul>
+<h2>Javascript API</h2>
+<p>The <code>kernel</code> executable provides the following global functions:</p>
+<dl>
+  <dt><code>setTimeout<span class="params">(callback, milliseconds)</span></code></dt>
+  <dd>Functions like <a href="https://developer.mozilla.org/en/DOM/window.setTimeout"><code>window.setTimeout</code></a> in the browser, except that it returns an object on which you call <code>.clear()</code> instead of using <code>clearTimeout()</code>.</dd>
+  <dt><code>listen<span class="params">(callback, port, host)</span></code></dt>
+  <dd>Binds to and listens for connections on the specified <code>port</code> and <code>host</code> (optional; defaults to <code>127.0.0.1</code>). To stop listening, call <code>.close()</code> on the object that is returned. When a connection is established, issues <code>callback</code> with a connection object as its first argument. The connection object's <code>reader</code> member can be set to a function that will be called with a string argument when it is received from the client. It has a <code>write</code> function that sends a message to the client, and a <code>close</code> function that closes the connection.</dd>
+  <dt><code>connect<span class="params">(callback, port, host)</span></code></dt>
+  <dd>Functions like <code>listen</code> to connect to a server.  <code>host</code> is also optional, and the callback is only issued once with the same connection object.</dd>
+  <dt><code>print<span class="params">(string)</span></code></dt>
+  <dd>Prints <code>string</code> to <code>STDOUT</code>.</dd>
+</ul>
+<h2>C++ Library</h2>
+<p>The kerneljs library can be embedded into a C++ program. Here is a simple program that adds the same global functions available in the <code>kernel</code> executable:</p>
+<pre class="prettyprint">#include &lt;kernel.h>
+
+using namespace kernel;
+
+int main(int argc, char *argv[]) {
+  
+  HandleScope scope;
+  Kernel kernel;
+  
+  kernel->Set("setTimeout", FunctionTemplate::New(Timer::New));
+  kernel->Set("listen", FunctionTemplate::New(Server::New));
+  kernel->Set("connect", FunctionTemplate::New(Client::New));
+  kernel->Set("print", FunctionTemplate::New(Kernel::Print));
+
+  return kernel.Run(argc, argv);
+}</pre>
+<p>Dereferencing the <code>kernel</code> object simply returns the global <a href="http://izs.me/v8-docs/classv8_1_1ObjectTemplate.html"><code>ObjectTemplate</code></a>.  Your code can refer to <code>ev_loop Kernel::loop</code> when using the libev API and <code>Kernel::RunAsync</code> in place of <code>eio_custom</code>.</p>
+<a href="http://github.com/kganser/kerneljs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>

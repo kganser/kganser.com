@@ -1,0 +1,37 @@
+body {
+  margin: 15px 8px 8px 8px;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 20px;
+}
+.wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+a {
+  text-decoration: none;
+  color: #a11;
+}
+a:hover {
+  text-decoration: underline;
+}
+p.inset {
+  background-color: #eee;
+  padding: 10px;
+}
+h1 {
+  margin-top: 5px;
+}
+h1.logo {
+  color: #a11;
+}
+code, pre {
+  font-size: 13px;
+}
+pre {
+  padding: 2px 5px;
+  background-color: #eee;
+}
+code .params {
+  color: #666;
+}
