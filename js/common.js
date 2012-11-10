@@ -13,6 +13,7 @@
   script((document.location.protocol == 'https:' ? 'https://ssl' : 'http://www')+'.google-analytics.com/ga.js');
   
   // Disqus
-  script('http://kganser.disqus.com/embed.js');
+  if (document.getElementById('disqus_thread'))
+    script('http://kganser.disqus.com/embed.js');
   
 })();
