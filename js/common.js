@@ -10,7 +10,7 @@
   
   // Google Analytics
   window._gaq = [['_setAccount', 'UA-27434499-1'], ['_trackPageview']];
-  script(document.location.protocol == 'https:' ? 'https://ssl' : 'http://www')+'.google-analytics.com/ga.js');
+  script((document.location.protocol == 'https:' ? 'https://ssl' : 'http://www')+'.google-analytics.com/ga.js');
   
   // Disqus
   script('http://kganser.disqus.com/embed.js');
