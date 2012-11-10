@@ -65,7 +65,7 @@ document.body.appendChild(div);</pre>
     </tr>
   </tbody>
 </table>
-<h2>Asynchronous applications</h2>
+<h2>Leveraging Javascript</h2>
 <p>The last example uses a function to populate the parent element, which is passed in by the jsml renderer as it traverses the structure. The function can also synchronously return a jsml structure on which the renderer will continue to operate. This allows you to intercept pointers to the elements as they are generated, which is particularly useful for asynchronous operations:</p>
 <pre class="prettyprint">$(document.body).jsml({div: function(elem) {
   setTimeout(function() {
@@ -73,4 +73,5 @@ document.body.appendChild(div);</pre>
   }, 1000);
   return "waiting...";
 }});</pre>
+<p>This is just one example of the benefits of leveraging pure javascript and its runtime environment (i.e., the event loop, closures, and lexical scoping) to generate both the markup and functionality of an application. Numerous frameworks (including those intended to run client-side) seek to separate logic from data in application development, creating templating languages with ungainly, ad-hoc syntaxes that re-implement the simplest features of a programming language. The result is slower, more complex and bloated applications with more global variables and an added learning curve. Rather than separate the two or try to insert logic into DOM markup, jsml represents DOM data naturally as a subset of the programming language, allowing entire applications to be written as a single javascript expression.</p>
 <a href="http://github.com/kganser/jsml"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
