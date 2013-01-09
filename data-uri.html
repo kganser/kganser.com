@@ -1,7 +1,7 @@
 ---
 layout: default
-title: kerneljs
-description: A minimal evented javascript environment for the server.
+title: data uri generator
+description: An in-browser data: URI generator for your images.
 ---
 <h1>data uri generator</h1>
 <p>This tool uses <a href="http://www.html5rocks.com/en/tutorials/file/dndfiles/">HTML5 APIs</a> to quickly generate <code>data:</code> URIs for images on the client side.  The <a href="http://en.wikipedia.org/wiki/Data_URI_scheme">data: URI scheme</a> is supported by modern browsers and is especially useful for optimizing mobile app UIs.</p>
@@ -31,7 +31,7 @@ description: A minimal evented javascript environment for the server.
   document.addEventListener('DOMContentLoaded', function() {
     if (!(window.File && window.FileReader && window.FileList && window.Blob))
       return alert('Sorry, your browser does not support the necessary HTML5 APIs.\nTry using the latest version of Chrome.');
-    var $ = document.getElementById.bind(document);
+    var $ = function(id) { return document.getElementById(id); };
     $('clear').onclick = function() { $('output').innerHTML = ''; };
     $('files').onchange = function(e) {
       Array.prototype.slice.call(e.target.files).forEach(function(file) {
