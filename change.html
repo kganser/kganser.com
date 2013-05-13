@@ -1,0 +1,164 @@
+---
+layout: default
+title: making change
+description: A review of greedy and dynamic programming algorithms applied to making change.
+---
+<style>
+  #stack span {
+    color: green;
+    display: none;
+  }
+  #stack div {
+    overflow: hidden;
+    max-height: 8em;
+    transition: max-height 1s;
+    -webkit-transition: max-height 1s;
+  }
+  #stack.memoized span {
+    display: inline;
+  }
+  #stack.memoized div {
+    max-height: 0;
+  }
+</style>
+<h1>making change</h1>
+<p>The change-making problem is a popular interview question for programmers that explores two of the major classes of algorithms: <a href="http://en.wikipedia.org/wiki/Greedy_algorithm">greedy algorithms</a> and <a href="http://en.wikipedia.org/wiki/Dynamic_programming">dynamic programming</a>.</p>
+<p>The greedy algorithm is an efficient solution to the change-making problem. It is the algorithm we intuitively apply when making change in real life. Namely, use as many coins as possible of each denomination &mdash; in descending order &mdash; without going over the amount needed. In javascript, the solution looks like this:</p>
+<pre class="prettyprint">
+var makeChange = function(amount) {
+  var change = [],
+      total = 0;
+  [25, 10, 5, 1].forEach(function(coin) {
+    while (total + coin &lt;= amount) {
+      change.push(coin);
+      total += coin;
+    }
+  });
+  return change;
+};
+</pre>
+<form id="greedy">
+  <strong>Try it:</strong>
+  <input type="text" id="greedy-amount" value="37" size="2">&cent;
+  <input type="submit" value="Make change">
+  <span id="greedy-change"></span>
+</form>
+<p>Characteristically, this algorithm makes the locally optimal choice on each iteration. Using American currency (and most others), it is in fact the optimal solution, in that it always returns change using the fewest coins.</p>
+<p>However, the greedy algorithm is not optimal for all denominations. For example, if the nickel were replaced by a 6&cent; coin, change in the amount of 12&cent; would consist of 10&cent;, 1&cent;, 1&cent; rather than the optimal 6&cent;, 6&cent;. Further, if the penny were removed, the greedy algorithm would not generate exact change at all, even though it is possible to do so.</p>
+<p>The general solution is one that accounts for the possibility that the locally optimal choice (i.e., the right coin at a given iteration) is not globally optimal (i.e., the right coin for a given amount). It does this by comparing each choice of coins at each iteration. However, what distinguishes this approach from the exponential-time brute force algorithm is that intermediate results are cached (a.k.a. <a href="http://en.wikipedia.org/wiki/Memoization">memoized</a>).  Below is a curried implementation of the dynamic programming algorithm that generates change using the given denominations for a given amount.</a>
+<pre class="prettyprint">
+var makeChange = function(coins) {
+  var change, cache = {};
+  return change = function(amount) {
+    if (!amount) return [];
+    if (cache[amount]) return cache[amount].slice(0);
+    var min = [], newMin, newAmount;
+    coins.forEach(function(coin) {
+      if (
+        (newAmount = amount - coin) >= 0 &amp;&amp;
+        ((newMin = change(newAmount)).length &lt; min.length-1 || !min.length) &amp;&amp;
+        (newMin.length || !newAmount)
+      )
+        min = [coin].concat(newMin);
+    });
+    return (cache[amount] = min).slice(0);
+  };
+};
+</pre>
+<form id="dynamic">
+  <strong>Try it:</strong>
+  <input type="text" id="dynamic-denominations" value="1 6 10 25"> <label for="dynamic-denominations">denominations</label>;
+  <input type="text" id="dynamic-amount" value="37" size="2">&cent;
+  <input type="submit" value="Make change">
+  <span id="dynamic-change"></span>
+</form>
+<p>Below is a trace of the recursive calls required by the solution to make 12&cent; in change using denominations of 1&cent;, 6&cent;, 10&cent;, 25&cent; (traversed in that order). Each call assumes an optimal value of 1 + the lowest optimal value of the recursive calls invoked with the remaining amount. Click on the stack to apply dynamic programming's memoization on this call graph.</p>
+<pre id="stack">
+change(12)                        => 2 coins optimal (6&cent; 6&cent;)
+  change(11)                      => 6 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent; 6&cent;)
+    change(10)                    => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 6&cent;)
+      change(9)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 6&cent;)
+        change(8)                 => 3 coins optimal (1&cent; 1&cent; 6&cent;)
+          change(7)               => 2 coins optimal (1&cent; 6&cent;)
+            change(6)             => 1 coin  optimal (6&cent;)
+              change(5)           => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;)
+                change(4)         => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
+                  change(3)       => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+                    change(2)     => 2 coins optimal (1&cent; 1&cent;)
+                      change(1)   => 1 coin  optimal (1&cent;)
+                        change(0) => 0 coins optimal
+              change(0)           => 0 coins optimal
+            change(1)             => 1 coin  optimal (1&cent;)             <span>(cached)</span>
+<div>              change(0)           => 0 coins optimal
+</div>          change(2)               => 2 coins optimal (1&cent; 1&cent;)          <span>(cached)</span>
+<div>            change(1)             => 1 coin  optimal (1&cent;)
+              change(0)           => 0 coins optimal
+</div>        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)       <span>(cached)</span>
+<div>          change(2)               => 2 coins optimal (1&cent; 1&cent;)
+            change(1)             => 1 coin  optimal (1&cent;)
+              change(0)           => 0 coins optimal
+</div>      change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)    <span>(cached)</span>
+<div>        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+          change(2)               => 2 coins optimal (1&cent; 1&cent;)
+            change(1)             => 1 coin  optimal (1&cent;)
+              change(0)           => 0 coins optimal
+</div>    change(5)                     => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;) <span>(cached)</span>
+<div>      change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
+        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+          change(2)               => 2 coins optimal (1&cent; 1&cent;)
+            change(1)             => 1 coin  optimal (1&cent;)
+              change(0)           => 0 coins optimal
+</div>  change(6)                       => 1 coin  optimal (6&cent;)             <span>(cached)</span>
+<div>    change(5)                     => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;)
+      change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
+        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+          change(2)               => 2 coins optimal (1&cent; 1&cent;)
+            change(1)             => 1 coin  optimal (1&cent;)
+              change(0)           => 0 coins optimal
+</div>    change(0)                     => 0 coins optimal
+</pre>
+<script>
+  (function() {
+    var greedy = function(amount) {
+      var change = [], total = 0;
+      [25, 10, 5, 1].forEach(function(coin) {
+        while (total + coin <= amount) {
+          change.push(coin);
+          total += coin;
+        }
+      });
+      return change;
+    };
+    var dynamic = function(coins) {
+      var change, cache = {};
+      return change = function(amount) {
+        if (!amount) return [];
+        if (cache[amount]) return cache[amount].slice(0);
+        var min = [], newMin, newAmount;
+        coins.forEach(function(coin) {
+          if (
+            (newAmount = amount - coin) >= 0 &&
+            ((newMin = change(newAmount)).length < min.length-1 || !min.length) &&
+            (newMin.length || !newAmount)
+          )
+            min = [coin].concat(newMin);
+        });
+        return (cache[amount] = min).slice(0);
+      };
+    };
+    $('greedy').onsubmit = function(e) {
+      e.preventDefault();
+      $('greedy-change').innerHTML = greedy(parseInt($('greedy-amount').value, 10)).map(function(coin) { return coin+'&cent;' }).join(' ');
+    };
+    $('dynamic').onsubmit = function(e) {
+      e.preventDefault();
+      var field = $('dynamic-denominations');
+      var coins = field.value.split(/[ ,]+/).map(function(value) { return parseFloat(value); }).filter(function(value) { return value; });
+      field.value = coins.join(' ');
+      $('dynamic-change').innerHTML = dynamic(coins)(parseInt($('dynamic-amount').value, 10)).map(function(coin) { return coin+'&cent;' }).join(' ');
+    };
+    $('stack').onclick = function() {
+      this.className = this.className == 'memoized' ? '' : 'memoized';
+    };
+  })();
+</script>
