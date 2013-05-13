@@ -118,7 +118,7 @@ change(12)                        => 2 coins optimal (6&cent; 6&cent;)
 </div>    change(0)                     => 0 coins optimal
 </pre>
 <script>
-  (function() {
+  document.addEventListener('DOMContentLoaded', function() {
     var greedy = function(amount) {
       var change = [], total = 0;
       [25, 10, 5, 1].forEach(function(coin) {
@@ -160,5 +160,5 @@ change(12)                        => 2 coins optimal (6&cent; 6&cent;)
     $('stack').onclick = function() {
       this.className = this.className == 'memoized' ? '' : 'memoized';
     };
-  })();
+  });
 </script>
