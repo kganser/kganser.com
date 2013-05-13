@@ -28,20 +28,17 @@ description: An in-browser Data URI generator for your images.
 <button id="clear">Clear</button>
 <ul id="output"></ul>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    if (!(window.File && window.FileReader && window.FileList && window.Blob))
-      return alert('Sorry, your browser does not support the necessary HTML5 APIs.\nTry using the latest version of Chrome.');
-    var $ = function(id) { return document.getElementById(id); };
-    $('clear').onclick = function() { $('output').innerHTML = ''; };
-    $('files').onchange = function(e) {
-      Array.prototype.slice.call(e.target.files).forEach(function(file) {
-        if (!file.type.match('image.*')) return;
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          $('output').innerHTML += '<li><img src="'+e.target.result+'" title="'+file.name+'"><textarea>'+e.target.result+'</textarea></li>';
-        };
-        reader.readAsDataURL(file);
-      });
-    };
-  });
+  if (!(window.File && window.FileReader && window.FileList && window.Blob))
+    return alert('Sorry, your browser does not support the necessary HTML5 APIs.\nTry using the latest version of Chrome.');
+  $('clear').onclick = function() { $('output').innerHTML = ''; };
+  $('files').onchange = function(e) {
+    Array.prototype.slice.call(e.target.files).forEach(function(file) {
+      if (!file.type.match('image.*')) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        $('output').innerHTML += '<li><img src="'+e.target.result+'" title="'+file.name+'"><textarea>'+e.target.result+'</textarea></li>';
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 </script>
