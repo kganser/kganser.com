@@ -75,7 +75,7 @@ var makeChange = function(coins) {
   <input type="submit" value="Make change">
   <span id="dynamic-change"></span>
 </form>
-<p>Below is a trace of the recursive calls required by the solution to make 12&cent; in change using denominations of 1&cent;, 6&cent;, 10&cent;, 25&cent; (traversed in that order). Each call assumes an optimal value of 1 + the lowest optimal value of the recursive calls invoked with the remaining amount. Click on the stack to apply dynamic programming's memoization on this call graph.</p>
+<p>Below is a trace of the recursive calls required by the solution to make 12&cent; in change using denominations of 1&cent;, 6&cent;, 10&cent; (traversed in that order). Each call assumes an optimal value of 1 + the lowest optimal value of the recursive calls invoked with the remaining amount. Click on the stack to apply dynamic programming's memoization on this call graph.</p>
 <pre id="stack">
 change(12)                        => 2 coins optimal (6&cent; 6&cent;)
   change(11)                      => 6 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent; 6&cent;)
