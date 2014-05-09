@@ -35,8 +35,4 @@ $ = document.getElementById.bind(document);
   window._gaq = [['_setAccount', 'UA-27434499-1'], ['_trackPageview']];
   script((document.location.protocol == 'https:' ? 'https://ssl' : 'http://www')+'.google-analytics.com/ga.js');
   
-  // Disqus
-  if (document.getElementById('disqus_thread'))
-    script('http://kganser.disqus.com/embed.js');
-  
 })();
