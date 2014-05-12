@@ -3,12 +3,6 @@ layout: default
 title: jscc
 description: A simple parser generator written in javascript.
 ---
-<style>
-  #tree {
-    min-height: 400px;
-    line-height: normal;
-  }
-</style>
 <h1>jscc</h1>
 <p>Jscc is a simple parser generator written in javascript. It allows you to generate a parser (currently <a href="http://en.wikipedia.org/wiki/Simple_LR_parser">SLR</a>) for a language you define using a context-free grammar specification.  This grammar is given as a pure javascript data structure as follows:</p>
 <pre class="prettyprint">{
@@ -47,7 +41,7 @@ var calculate = $.jscc({
 <input id="expression" type="text" value="(1 + 2) * 3 / 4 - 5">
 <button id="calculate">Calculate</button>
 <span id="result"></span>
-<pre id="tree"></pre>
+<pre id="tree" style="min-height: 400px"></pre>
 <script src="http://rawgit.com/kganser/kerneljs/master/src/kernel.js"></script>
 <script src="http://rawgit.com/kganser/jscc/master/src/jscc.js"></script>
 <script>
