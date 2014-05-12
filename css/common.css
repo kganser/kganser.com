@@ -28,6 +28,7 @@ code, pre {
 pre {
   padding: 2px 5px;
   background-color: #eee;
+  overflow: auto;
 }
 code .params {
   color: #666;
