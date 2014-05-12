@@ -87,8 +87,8 @@ kernel.use({jscc: 0}, function($) {
     } catch (e) {
       var value = {value: '', tree: [e.message+'\n'+e.line+'\n'+new Array(e.column+1).join(' ')+'^']};
     }
-    document.getElementById('result').innerText = value.value;
-    document.getElementById('tree').innerText = (function print(branch, indent, last) {
+    document.getElementById('result').innerHTML = value.value;
+    document.getElementById('tree').innerHTML = (function print(branch, indent, last) {
       var n = last != undefined ? last ? ['└', ' '] : ['├', '│'] : ['', ''];
       if (typeof branch == 'string')
           return indent+n[0]+'"'+branch+'"\n';
