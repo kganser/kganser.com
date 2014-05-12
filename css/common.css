@@ -34,3 +34,19 @@ pre {
 code .params {
   color: #666;
 }
+.git-banner {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 149px;
+  height: 149px;
+  background-image: url(https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png);
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+  .git-banner {
+    width: 75px;
+    height: 75px;
+    background-size: 75px 75px;
+  }
+}
