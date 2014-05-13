@@ -68,12 +68,11 @@ var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0
       if (!key) {
         elem.onclick = function() {
           if (lastSorted) lastSorted.className = '';
-          if (elem != lastSorted) order = 1;
+          order = elem == lastSorted ? -order : 1;
           (lastSorted = elem).className = order > 0 ? 'asc' : 'desc';
           table.sort(function(a, b) {
             return order * a[value].localeCompare(b[value]);
           });
-          order *= -1;
         };
       }
       elem.innerHTML = value;
@@ -100,12 +99,11 @@ var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0
           if (!key) {
             elem.onclick = function() {
               if (lastSorted) lastSorted.className = '';
-              if (elem != lastSorted) order = 1;
+              order = elem == lastSorted ? -order : 1;
               (lastSorted = elem).className = order > 0 ? 'asc' : 'desc';
               table.sort(function(a, b) {
                 return order * a[value].localeCompare(b[value]);
               });
-              order *= -1;
             };
           }
           elem.innerHTML = value;
