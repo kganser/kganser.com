@@ -54,7 +54,7 @@ var data = [
   {Company: 'Facebook', CEO: 'Mark Zuckerberg', Founded: '2004', Headquarters: 'Menlo Park, CA'},
   {Company: 'Apple', CEO: 'Tim Cook', Founded: '1976', Headquarters: 'Cupertino, CA'}
 ];
-$.table(data, Object.keys(data[0]));</pre>
+$.table(document.getElementById('basic'), data, Object.keys(data[0]));</pre>
 <p id="basic"></p>
 <h2>Sorting Headers</h2>
 <p>This example adds sorting functionality to the table by adding <code>onclick</code> handlers to its <code>th</code> elements via a custom <code>cell</code> generator.</p>
@@ -115,3 +115,4 @@ var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0
     });
   });
 </script>
+<a class="git-banner" href="http://github.com/kganser/json-table"></a>
