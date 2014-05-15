@@ -33,8 +33,8 @@ var calculate = $.jscc({
     [['number'], function(e) { return parseInt(e[0], 10); }]
   ]
 }, 'addition', {
-  number: /^[0-9]+/,
-  '': /^\s+/ // empty string token denotes characters to ignore
+  number: /[0-9]+/,
+  '': /\s+/ // empty string token denotes characters to ignore
 });
 </pre>
 <p>You can try the calculator below.  The result will appear beside the button, and the parse tree will appear below.</p>
@@ -77,8 +77,8 @@ kernel.use({jscc: 0}, function($) {
       [['number'], function(e) { return parseInt(e[0], 10); }]
     ]
   }, 'addition', {
-    number: /^[0-9]+/,
-    '': /^\s+/
+    number: /[0-9]+/,
+    '': /\s+/
   });
   
   document.getElementById('calculate').onclick = function() {
