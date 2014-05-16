@@ -65,24 +65,22 @@ var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0
     return function(value, index, key) {
       // key is undefined for header cells
       var elem = document.createElement(key ? 'td' : 'th');
-      if (!key) {
-        elem.onclick = function() {
-          if (lastSorted) lastSorted.className = '';
-          order = elem == lastSorted ? -order : 1;
-          (lastSorted = elem).className = order > 0 ? 'asc' : 'desc';
-          table.sort(function(a, b) {
-            return order * a[value].localeCompare(b[value]);
-          });
-        };
-      }
       elem.innerHTML = value;
+      if (!key) elem.onclick = function() {
+        if (lastSorted) lastSorted.className = '';
+        order = this == lastSorted ? -order : 1;
+        (lastSorted = this).className = order > 0 ? 'asc' : 'desc';
+        table.sort(function(a, b) {
+          return order * a[value].localeCompare(b[value]);
+        });
+      };
       return elem;
     };
   })()
 });</pre>
 <p id="sorting"></p>
 <script src="http://rawgit.com/kganser/kerneljs/master/src/kernel.js"></script>
-<script src="http://rawgit.com/kganser/json-table/master/src/json-table-kernel.js"></script>
+<script src="http://rawgit.com/kganser/json-table/master/src/table.js"></script>
 <script>
   kernel.use({table: 0}, function($, data) {
     var data = [
@@ -96,21 +94,47 @@ var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0
       cell: (function(lastSorted, order) {
         return function(value, index, key) {
           var elem = document.createElement(key ? 'td' : 'th');
-          if (!key) {
-            elem.onclick = function() {
-              if (lastSorted) lastSorted.className = '';
-              order = elem == lastSorted ? -order : 1;
-              (lastSorted = elem).className = order > 0 ? 'asc' : 'desc';
-              table.sort(function(a, b) {
-                return order * a[value].localeCompare(b[value]);
-              });
-            };
-          }
           elem.innerHTML = value;
+          if (!key) elem.onclick = function() {
+            if (lastSorted) lastSorted.className = '';
+            order = this == lastSorted ? -order : 1;
+            (lastSorted = this).className = order > 0 ? 'asc' : 'desc';
+            table.sort(function(a, b) {
+              return order * a[value].localeCompare(b[value]);
+            });
+          };
           return elem;
         };
       })()
     });
   });
 </script>
+<!--
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://rawgit.com/kganser/json-table/master/src/table-jquery.js"></script>
+<script>
+  var data = [
+    {Company: 'Yahoo', CEO: 'Marissa Mayer', Founded: '1994', Headquarters: 'Sunnyvale, CA'},
+    {Company: 'Google', CEO: 'Larry Page', Founded: '1998', Headquarters: 'Mountain View, CA'},
+    {Company: 'Facebook', CEO: 'Mark Zuckerberg', Founded: '2004', Headquarters: 'Menlo Park, CA'},
+    {Company: 'Apple', CEO: 'Tim Cook', Founded: '1976', Headquarters: 'Cupertino, CA'}
+  ];
+  $('#basic').table(data, Object.keys(data[0]));
+  var table = $('#sorting').table(data, Object.keys(data[0]), {
+    cell: (function(lastSorted, order) {
+      return function(value, index, key) {
+        var cell = $(key ? '<td>' : '<th>').text(value);
+        return key ? cell : cell.click(function() {
+          if (lastSorted) lastSorted.className = '';
+          order = this == lastSorted ? -order : 1;
+          (lastSorted = this).className = order > 0 ? 'asc' : 'desc';
+          table.sort(function(a, b) {
+            return order * a[value].localeCompare(b[value]);
+          });
+        });
+      };
+    })()
+  });
+</script>
+-->
 <a class="git-banner" href="http://github.com/kganser/json-table"></a>
