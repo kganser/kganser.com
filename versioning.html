@@ -26,8 +26,7 @@ kernel.add('mymodule', function() {
 
 kernel.use({mymodule: 1}, function($) {
   $.mymodule(); // 'new version'
-});
-    </pre>
+});</pre>
     <h2>Specifying dependencies</h2>
     <p>The value assigned to the module name in the first argument to <code>kernel.use</code> can be more complex than a simple major version number. Here are some examples:</p>
     <div class="scroll">

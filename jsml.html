@@ -20,8 +20,7 @@ a.href = "http://kganser.com";
 a.onclick = function(e) { e.preventDefault(); alert("You Clicked!"); };
 a.appendChild(document.createTextNode("here"));
 div.appendChild(a);
-document.body.appendChild(div);
-    </pre>
+document.body.appendChild(div);</pre>
     <p>The same structure can be generated using jsml as follows:</p>
     <pre class="prettyprint">
 $(document.body).jsml({div: [
@@ -30,8 +29,7 @@ $(document.body).jsml({div: [
     href: "http://kganser.com",
     onclick: function(e) { e.preventDefault(); alert("You Clicked!"); }
   }, ["here"]]}
-]});
-    </pre>
+]});</pre>
     <h2>Production rules</h2>
     <pre>
 <strong>element</strong> = {<em>tagname</em>: <strong>attributes</strong>}
@@ -40,8 +38,7 @@ $(document.body).jsml({div: [
         | {<em>tagname</em>: [<strong>attributes</strong>, [<strong>child</strong>, ...]]}
 <strong>attributes</strong> = {<em>name</em>: <em>value</em>, ...}
 <strong>child</strong> = <strong>element</strong> | <strong>primitive</strong>
-<strong>primitive</strong> = <em>null</em> | <em>string</em> | <em>number</em> | <em>boolean</em> | <em>function</em>
-    </pre>
+<strong>primitive</strong> = <em>null</em> | <em>string</em> | <em>number</em> | <em>boolean</em> | <em>function</em></pre>
     <p>An element is specified as an object with a single key and value. The key is the element's <em>tagname</em>, and its value is either an object with its attributes, its content, or an array of the two.</p>
     <h3>Examples</h3>
     <div class="scroll">
@@ -58,23 +55,23 @@ $(document.body).jsml({div: [
             <td><pre>&lt;div>&lt;/div></pre></td>
           </tr>
           <tr>
-            <td><pre>{div: "hello"}</pre></td>
+            <td><pre>{div: 'hello'}</pre></td>
             <td><pre>&lt;div>hello&lt;/div></pre></td>
           </tr>
           <tr>
-            <td><pre>{div: {className: "hello"}}</pre></td>
+            <td><pre>{div: {className: 'hello'}}</pre></td>
             <td><pre>&lt;div class="hello">&lt;/div></pre></td>
           </tr>
           <tr>
-            <td><pre>{div: [{className: "hello"}, ["world"]]}</pre></td>
+            <td><pre>{div: [{className: 'hello'}, ['world']]}</pre></td>
             <td><pre>&lt;div class="hello">world&lt;/div></pre></td>
           </tr>
           <tr>
-            <td><pre>{div: [{className: "hello"}, [{span: "world"}]]}</pre></td>
+            <td><pre>{div: [{className: 'hello'}, [{span: 'world'}]]}</pre></td>
             <td><pre>&lt;div class="hello">&lt;span>world&lt;/span>&lt;/div></pre></td>
           </tr>
           <tr>
-            <td><pre>{div: function(elem) {<br/>&nbsp;&nbsp;elem.innerHTML = "hello, world";<br>}}</pre></td>
+            <td><pre>{div: function(elem) {<br/>&nbsp;&nbsp;elem.innerHTML = 'hello, world';<br>}}</pre></td>
             <td><pre>&lt;div>hello, world&lt;/div></pre></td>
           </tr>
         </tbody>
@@ -85,11 +82,10 @@ $(document.body).jsml({div: [
     <pre class="prettyprint">
 $(document.body).jsml({div: function(elem) {
   setTimeout(function() {
-    elem.innerHTML = "1 second has passed";
+    elem.innerHTML = 'done!';
   }, 1000);
-  return "waiting...";
-}});
-    </pre>
+  return 'loading...';
+}});</pre>
     <p>This is just one example of the benefits of leveraging pure javascript and its runtime environment (i.e., the event loop, closures, and lexical scoping) to generate both the markup and functionality of an application. Numerous frameworks (including those intended to run client-side) seek to separate logic from data in application development, creating templating languages with ungainly, ad-hoc syntaxes that re-implement the simplest features of a programming language. The result is slower, more complex and bloated applications with more global variables and an added learning curve. Rather than separate the two or try to insert logic into DOM markup, jsml represents DOM data naturally as a subset of the programming language, allowing entire applications to be written as a single javascript expression.</p>
     <a class="git-banner" href="http://github.com/kganser/jsml"></a>
     <script src="/js/common.js"></script>

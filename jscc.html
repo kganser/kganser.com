@@ -19,8 +19,7 @@
     ...
   ],
   ...
-}
-    </pre>
+}</pre>
     <p>This grammar (similar to BNF) is an object with <em>nonterminal</em> symbols as keys. The values are arrays of one or more production-handler pairs.  A production is itself an array (possibly empty) of <em>symbols</em> (either terminals or nonterminals) to which the nonterminal can expand. Here, terminals are simply strings that do not appear as keys in the grammar object. The <em>handler</em> is a function that will be called when reducing the associated production rule. When called, its first argument will be an array of reduced values of the symbols in the corresponding production, from which it is expected to return its own reduced value.</p>
     <p>Any string in the grammar not appearing as a key in the grammar object is interpreted literally as a terminal symbol.  Jscc also accepts an object mapping terminal symbols to regular expressions that serves as a built-in lexer.</p>
     <h2>Example</h2>
@@ -44,8 +43,7 @@ var calculate = $.jscc({
 }, 'addition', {
   number: /[0-9]+/,
   '': /\s+/ // empty string token denotes characters to ignore
-});
-    </pre>
+});</pre>
     <p>You can try the calculator below.  The result will appear beside the button, and the parse tree will appear below.</p>
     <input id="expression" type="text" value="(1 + 2) * 3 / 4 - 5">
     <button id="calculate">=</button>

@@ -55,8 +55,7 @@ int main(int argc, char *argv[]) {
   kernel->Set("print", FunctionTemplate::New(Kernel::Print));
 
   return kernel.Run(argc, argv);
-}
-    </pre>
+}</pre>
     <p>Dereferencing the <code>kernel</code> object simply returns the global <a href="http://izs.me/v8-docs/classv8_1_1ObjectTemplate.html"><code>ObjectTemplate</code></a>.  Your code can refer to <code>ev_loop Kernel::loop</code> when using the libev API and <code>Kernel::RunAsync</code> in place of <code>eio_custom</code>.</p>
     <a class="git-banner" href="http://github.com/kganser/kerneljs"></a>
     <script src="/js/common.js"></script>

@@ -63,4 +63,7 @@ code .params {
     height: 75px;
     background-size: 75px 75px;
   }
+  h1.logo {
+    background-size: 302px 171px;
+  }
 }

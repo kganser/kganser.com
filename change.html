@@ -48,8 +48,7 @@ var makeChange = function(amount) {
     }
   });
   return change;
-};
-    </pre>
+};</pre>
     <form id="greedy">
       <strong>Try it:</strong>
       <input type="text" id="greedy-amount" value="37" size="2">&cent;
@@ -76,8 +75,7 @@ var makeChange = function(coins) {
     });
     return (cache[amount] = min).slice(0);
   };
-};
-    </pre>
+};</pre>
     <form id="dynamic">
       <strong>Try it:</strong>
       <input type="text" id="dynamic-denominations" value="1 6 10 25"> <label for="dynamic-denominations">denominations</label>;
@@ -128,8 +126,7 @@ change(12)                        => 2 coins optimal (6&cent; 6&cent;)
           change(2)               => 2 coins optimal (1&cent; 1&cent;)
             change(1)             => 1 coin  optimal (1&cent;)
               change(0)           => 0 coins optimal
-</div>    change(0)                     => 0 coins optimal
-    </pre>
+</div>    change(0)                     => 0 coins optimal</pre>
     <script src="/js/common.js"></script>
     <script src="/js/prettify.js"></script>
     <script>
