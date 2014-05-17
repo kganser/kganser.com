@@ -16,7 +16,7 @@ p, li {
   line-height: 1.3;
 }
 .profile {
-  margin: -15px -10px 0 -15px;
+  margin: -15px -10px 0 -10px;
 }
 .profile p {
   background-color: #eee;
@@ -67,5 +67,6 @@ code .params {
   }
   .profile h1 {
     background-size: 302px 171px;
+    height: 30px;
   }
 }
