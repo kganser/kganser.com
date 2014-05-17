@@ -1,64 +1,79 @@
----
-layout: default
-title: Versioning for javascript modules
-description: A versioning strategy for javascript modules. 
----
-<h1>Versioning for javascript modules</h1>
-<p>Platforms and frameworks often support and encourage versioning of module APIs. However, the semantics of version numbers are often left to the module owner, resulting in a variety of schemes that put much of the burden of verification on the client developer. Among existing javascript frameworks, this is no exception.</p>
-<p>In an attempt to address this, <a href="/kerneljs.html">kerneljs</a> includes a <a href="https://github.com/kganser/kerneljs/blob/master/src/kernel.js">dependency resolver</a> that manages modules using a simple, consistent versioning scheme.</p>
-<h2>Major &amp; minor</h2>
-<p>A module registered with the <code>kernel</code> dependency resolver is assigned major and minor version numbers corresponding to backward-incompatible and backward-compatible changes, respectively. For the purpose of automated dependency resolution, <em>backward compatibility is the only meaningful distinction between versions of a module</em>. The dependency resolver upgrades to newer minor versions on an opt-out basis and to newer major versions on an opt-in basis.</p>
-<p>To use a module, a client would, in the simplest case, register a desired major version number. The supplied module (if available) would have the requested major version and the greatest minor version available.</p>
-<pre class="prettyprint lang-js">kernel.add("mymodule", function() {
-  return {print: function() { console.log("new version"); }};
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kganser.com - {{ page.title }}</title>
+    <meta charset="utf-8">
+    <meta name="description" content="{{ page.description }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/prettify.css">
+  </head>
+  <body>
+    <a href="/">kganser.com</a>
+    <h1>Versioning for javascript modules</h1>
+    <p>Platforms and frameworks often support and encourage versioning of module APIs. However, the semantics of version numbers are often left to the module owner, resulting in a variety of schemes that put much of the burden of verification on the client developer. Among existing javascript frameworks, this is no exception.</p>
+    <p>In an attempt to address this, <a href="/kerneljs.html">kerneljs</a> includes a <a href="https://github.com/kganser/kerneljs/blob/master/src/kernel.js">dependency resolver</a> that manages modules using a simple, consistent versioning scheme.</p>
+    <h2>Major &amp; minor</h2>
+    <p>A module registered with the <code>kernel</code> dependency resolver is assigned major and minor version numbers corresponding to backward-incompatible and backward-compatible changes, respectively. For the purpose of automated dependency resolution, <em>backward compatibility is the only meaningful distinction between versions of a module</em>. The dependency resolver upgrades to newer minor versions on an opt-out basis and to newer major versions on an opt-in basis.</p>
+    <p>To use a module, a client would, in the simplest case, register a desired major version number. The supplied module (if available) would have the requested major version and the greatest minor version available.</p>
+    <pre class="prettyprint">
+kernel.add('mymodule', function() {
+  return function() { console.log('new version'); };
 }, 1, 1);
-kernel.add("mymodule", function() {
-  return {print: function() { console.log("old version"); }};
+kernel.add('mymodule', function() {
+  return function() { console.log('old version'); };
 }, 1, 0);
 
 kernel.use({mymodule: 1}, function($) {
-  $.mymodule.print(); // "new version"
-});</pre>
-<h2>Specifying dependencies</h2>
-<p>The value assigned to the module name in the first argument to <code>kernel.use</code> can be more complex than a simple major version number. Here are some examples:</p>
-<table>
-  <thead>
-    <tr>
-      <th>Value</th>
-      <th>Match</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>1</code></td>
-      <td>major = 1 and minor &ge; 0</td>
-    </tr>
-    <tr>
-      <td><code>[1, 2]</code></td>
-      <td>major = 1 or 2 and minor &ge; 0</td>
-    </tr>
-    <tr>
-      <td><code>[[1, 5], 2]</code></td>
-      <td>major = 1 and minor &ge; 5 or major = 2 and minor &ge; 0</td>
-    </tr>
-    <tr>
-      <td><code>[[1, [5, 6]]]</code></td>
-      <td>major = 1 and minor &ge; 5 and &le; 6</td>
-    </tr>
-    <tr>
-      <td><code>[[1, [5, 6, 8, 8, 10]]]</code></td>
-      <td>major = 1 and minor &ge; 5 and &le; 6 or = 8 or &ge; 10</td>
-    </tr>
-  </tbody>
-</table>
-<p>Each major version number has a minor version range (&ge; 0 by default) specified as an array of inclusive sub-ranges.  The more complex examples are only necessary when a module developer breaks backward compatibility in a minor version.</p>
-<h2>Backward compatibility</h2>
-<p>Though the resolver cannot programmatically enforce backward-compatibility, the following javascript-specific techniques serve as a contract between module and client developers:</p>
-<h3>Function calls</h3>
-<p>Functions can be extended backward-compatibly by accepting additional arguments. This discourages the use of the <a href="https://developer.mozilla.org/en/JavaScript/Reference/Functions_and_function_scope/arguments"><code>arguments</code></a> array for accepting arbitrarily long argument lists in favor of arguments of type <code>Array</code>.</p>
-<pre class="prettyprint lang-js">function(origArg1, origArg2, <strong>newArg</strong>) { ... }</pre>
-<p>Similarly, when specifying a callback, neither the module nor the client should assume that an additional argument will be <code>undefined</code>.</p>
-<h3>Objects</h3>
-<p>Objects (not arrays) can be extended backward-compatibly with new properties.</p>
-<h3>Bug compatibility</h3>
-<p>Module developers should preserve <a href="http://en.wikipedia.org/wiki/Bug_compatibility">bug compatibility</a> between minor versions, since a major version upgrade is the intended way of alerting users of possible regressions.</p>
+  $.mymodule(); // 'new version'
+});
+    </pre>
+    <h2>Specifying dependencies</h2>
+    <p>The value assigned to the module name in the first argument to <code>kernel.use</code> can be more complex than a simple major version number. Here are some examples:</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Value</th>
+            <th>Match</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>1</code></td>
+            <td>major = 1 and minor &ge; 0</td>
+          </tr>
+          <tr>
+            <td><code>[1, 2]</code></td>
+            <td>major = 1 or 2 and minor &ge; 0</td>
+          </tr>
+          <tr>
+            <td><code>[[1, 5], 2]</code></td>
+            <td>major = 1 and minor &ge; 5 or major = 2 and minor &ge; 0</td>
+          </tr>
+          <tr>
+            <td><code>[[1, [5, 6]]]</code></td>
+            <td>major = 1 and minor &ge; 5 and &le; 6</td>
+          </tr>
+          <tr>
+            <td><code>[[1, [5, 6, 8, 8, 10]]]</code></td>
+            <td>major = 1 and minor &ge; 5 and &le; 6 or = 8 or &ge; 10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Each major version number has a minor version range (&ge; 0 by default) specified as an array of inclusive sub-ranges.  The more complex examples are only necessary when a module developer breaks backward compatibility in a minor version.</p>
+    <h2>Backward compatibility</h2>
+    <p>Though the resolver cannot programmatically enforce backward-compatibility, the following javascript-specific techniques serve as a contract between module and client developers:</p>
+    <h3>Function calls</h3>
+    <p>Functions can be extended backward-compatibly by accepting additional arguments. This discourages the use of the <a href="https://developer.mozilla.org/en/JavaScript/Reference/Functions_and_function_scope/arguments"><code>arguments</code></a> array for accepting arbitrarily long argument lists in favor of arguments of type <code>Array</code>.</p>
+    <pre class="prettyprint">function(origArg1, origArg2, <strong>newArg</strong>) { ... }</pre>
+    <p>Similarly, when specifying a callback, neither the module nor the client should assume that an additional argument will be <code>undefined</code>.</p>
+    <h3>Objects</h3>
+    <p>Objects (not arrays) can be extended backward-compatibly with new properties.</p>
+    <h3>Bug compatibility</h3>
+    <p>Module developers should preserve <a href="http://en.wikipedia.org/wiki/Bug_compatibility">bug compatibility</a> between minor versions, since a major version upgrade is the intended way of alerting users of possible regressions.</p>
+    <script src="/js/common.js"></script>
+    <script src="/js/prettify.js"></script>
+  </body>
+</html>

@@ -1,22 +1,31 @@
----
-layout: default
-title: jscc
-description: A simple parser generator written in javascript.
----
-<h1>jscc</h1>
-<p>Jscc is a simple parser generator written in javascript. It allows you to generate a parser (currently <a href="http://en.wikipedia.org/wiki/Simple_LR_parser">SLR</a>) for a language you define using a context-free grammar specification.  This grammar is given as a pure javascript data structure as follows:</p>
-<pre class="prettyprint">{
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kganser.com - jscc</title>
+    <meta charset="utf-8">
+    <meta name="description" content="A simple parser generator written in javascript.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/prettify.css">
+  </head>
+  <body>
+    <a href="/">kganser.com</a>
+    <h1>jscc</h1>
+    <p>Jscc is a simple parser generator written in javascript. It allows you to generate a parser (currently <a href="http://en.wikipedia.org/wiki/Simple_LR_parser">SLR</a>) for a language you define using a context-free grammar specification.  This grammar is given as a pure javascript data structure as follows:</p>
+    <pre class="prettyprint">
+{
   <em>nonterminal</em>: [
     [[<em>symbol</em>, ...], function(e) { /* <em>handler</em> */ }],
     ...
   ],
   ...
-}</pre>
-<p>This grammar (similar to BNF) is an object with <em>nonterminal</em> symbols as keys. The values are arrays of one or more production-handler pairs.  A production is itself an array (possibly empty) of <em>symbols</em> (either terminals or nonterminals) to which the nonterminal can expand. Here, terminals are simply strings that do not appear as keys in the grammar object. The <em>handler</em> is a function that will be called when reducing the associated production rule. When called, its first argument will be an array of reduced values of the symbols in the corresponding production, from which it is expected to return its own reduced value.</p>
-<p>Any string in the grammar not appearing as a key in the grammar object is interpreted literally as a terminal symbol.  Jscc also accepts an object mapping terminal symbols to regular expressions that serves as a built-in lexer.</p>
-<h2>Example</h2>
-<p>Below is a call to <code>jscc</code> that creates a parser for a simple calculator.  The call specifies the calculator's grammar, the start symbol for the grammar, and an object for tokenizing numbers and ignoring whitespace.  The call returns a function that parses a given string, calling the associated handler functions on any reduction steps.</p>
-<pre class="prettyprint">
+}
+    </pre>
+    <p>This grammar (similar to BNF) is an object with <em>nonterminal</em> symbols as keys. The values are arrays of one or more production-handler pairs.  A production is itself an array (possibly empty) of <em>symbols</em> (either terminals or nonterminals) to which the nonterminal can expand. Here, terminals are simply strings that do not appear as keys in the grammar object. The <em>handler</em> is a function that will be called when reducing the associated production rule. When called, its first argument will be an array of reduced values of the symbols in the corresponding production, from which it is expected to return its own reduced value.</p>
+    <p>Any string in the grammar not appearing as a key in the grammar object is interpreted literally as a terminal symbol.  Jscc also accepts an object mapping terminal symbols to regular expressions that serves as a built-in lexer.</p>
+    <h2>Example</h2>
+    <p>Below is a call to <code>jscc</code> that creates a parser for a simple calculator.  The call specifies the calculator's grammar, the start symbol for the grammar, and an object for tokenizing numbers and ignoring whitespace.  The call returns a function that parses a given string, calling the associated handler functions on any reduction steps.</p>
+    <pre class="prettyprint">
 var calculate = $.jscc({
   addition: [
     [['addition', '+', 'multiplication'], function(e) { return e[0] + e[2]; }],
@@ -36,67 +45,71 @@ var calculate = $.jscc({
   number: /[0-9]+/,
   '': /\s+/ // empty string token denotes characters to ignore
 });
-</pre>
-<p>You can try the calculator below.  The result will appear beside the button, and the parse tree will appear below.</p>
-<input id="expression" type="text" value="(1 + 2) * 3 / 4 - 5">
-<button id="calculate">=</button>
-<span id="result"></span>
-<pre id="tree" style="min-height: 400px"></pre>
-<script src="http://rawgit.com/kganser/kerneljs/master/src/kernel.js"></script>
-<script src="http://rawgit.com/kganser/jscc/master/src/jscc.js"></script>
-<script>
-kernel.use({jscc: 0}, function($) {
-  var calculate = (function(grammar, start, tokens) {
-    var augmented = {};
-    Object.keys(grammar).forEach(function(symbol) {
-      augmented[symbol] = grammar[symbol].map(function(production) {
-        return [production[0], function(e) {
-          return {
-            tree: [symbol].concat(e),
-            value: production[1](e.map(function(e) {
-              return typeof e == 'object' ? e.value : e;
-            }))
-          };
-        }];
+    </pre>
+    <p>You can try the calculator below.  The result will appear beside the button, and the parse tree will appear below.</p>
+    <input id="expression" type="text" value="(1 + 2) * 3 / 4 - 5">
+    <button id="calculate">=</button>
+    <span id="result"></span>
+    <pre id="tree" style="min-height: 400px"></pre>
+    <a class="git-banner" href="http://github.com/kganser/jscc"></a>
+    <script src="/js/common.js"></script>
+    <script src="/js/prettify.js"></script>
+    <script src="http://rawgit.com/kganser/kerneljs/master/src/kernel.js"></script>
+    <script src="http://rawgit.com/kganser/jscc/master/src/jscc.js"></script>
+    <script>
+      kernel.use({jscc: 0}, function(k) {
+        var calculate = (function(grammar, start, tokens) {
+          var augmented = {};
+          Object.keys(grammar).forEach(function(symbol) {
+            augmented[symbol] = grammar[symbol].map(function(production) {
+              return [production[0], function(e) {
+                return {
+                  tree: [symbol].concat(e),
+                  value: production[1](e.map(function(e) {
+                    return typeof e == 'object' ? e.value : e;
+                  }))
+                };
+              }];
+            });
+          });
+          return k.jscc(augmented, start, tokens);
+        })({
+          addition: [
+            [['addition', '+', 'multiplication'], function(e) { return e[0] + e[2]; }],
+            [['addition', '-', 'multiplication'], function(e) { return e[0] - e[2]; }],
+            [['multiplication'], function(e) { return e[0]; }]
+          ],
+          multiplication: [
+            [['multiplication', '*', 'group'], function(e) { return e[0] * e[2]; }],
+            [['multiplication', '/', 'group'], function(e) { return e[0] / e[2]; }],
+            [['group'], function(e) { return e[0]; }]
+          ],
+          group: [
+            [['(', 'addition', ')'], function(e) { return e[1]; }],
+            [['number'], function(e) { return parseInt(e[0], 10); }]
+          ]
+        }, 'addition', {
+          number: /[0-9]+/,
+          '': /\s+/
+        });
+        
+        $('calculate').onclick = function() {
+          try {
+            var value = calculate(document.getElementById('expression').value);
+          } catch (e) {
+            var value = {value: '', tree: [e.message+'\n'+e.line+'\n'+new Array(e.column+1).join(' ')+'^']};
+          }
+          document.getElementById('result').innerHTML = value.value;
+          document.getElementById('tree').innerHTML = (function print(branch, indent, last) {
+            var n = last != undefined ? last ? ['└', ' '] : ['├', '│'] : ['', ''];
+            if (typeof branch == 'string')
+                return indent+n[0]+'"'+branch+'"\n';
+            return indent+n[0]+branch.tree[0]+'\n'+branch.tree.slice(1).map(function(i, j, k) {
+              return print(i, indent+(n[1]), j == k.length-1);
+            }).join('');
+          })(value, '');
+        };
       });
-    });
-    return $.jscc(augmented, start, tokens);
-  })({
-    addition: [
-      [['addition', '+', 'multiplication'], function(e) { return e[0] + e[2]; }],
-      [['addition', '-', 'multiplication'], function(e) { return e[0] - e[2]; }],
-      [['multiplication'], function(e) { return e[0]; }]
-    ],
-    multiplication: [
-      [['multiplication', '*', 'group'], function(e) { return e[0] * e[2]; }],
-      [['multiplication', '/', 'group'], function(e) { return e[0] / e[2]; }],
-      [['group'], function(e) { return e[0]; }]
-    ],
-    group: [
-      [['(', 'addition', ')'], function(e) { return e[1]; }],
-      [['number'], function(e) { return parseInt(e[0], 10); }]
-    ]
-  }, 'addition', {
-    number: /[0-9]+/,
-    '': /\s+/
-  });
-  
-  document.getElementById('calculate').onclick = function() {
-    try {
-      var value = calculate(document.getElementById('expression').value);
-    } catch (e) {
-      var value = {value: '', tree: [e.message+'\n'+e.line+'\n'+new Array(e.column+1).join(' ')+'^']};
-    }
-    document.getElementById('result').innerHTML = value.value;
-    document.getElementById('tree').innerHTML = (function print(branch, indent, last) {
-      var n = last != undefined ? last ? ['└', ' '] : ['├', '│'] : ['', ''];
-      if (typeof branch == 'string')
-          return indent+n[0]+'"'+branch+'"\n';
-      return indent+n[0]+branch.tree[0]+'\n'+branch.tree.slice(1).map(function(i, j, k) {
-        return print(i, indent+(n[1]), j == k.length-1);
-      }).join('');
-    })(value, '');
-  };
-});
-</script>
-<a class="git-banner" href="http://github.com/kganser/jscc"></a>
+    </script>
+  </body>
+</html>
