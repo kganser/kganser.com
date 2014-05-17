@@ -4,6 +4,7 @@ body {
   font-family: arial, helvetica, sans-serif;
   font-size: 15px;
   max-width: 800px;
+  -webkit-text-size-adjust: none;
 }
 a {
   text-decoration: none;
