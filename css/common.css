@@ -41,10 +41,8 @@ pre {
   background-color: #eee;
   overflow: auto;
 }
-table pre {
-  padding: 0;
-  margin: 0;
-  background-color: transparent;
+table code {
+  white-space: pre;
 }
 code .params {
   color: #666;
