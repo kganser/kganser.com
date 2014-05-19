@@ -13,6 +13,7 @@
         border-collapse: separate;
         border-spacing: 0;
         border: 1px solid #777;
+        position: relative;
       }
       th {
         font-weight: normal;
@@ -23,6 +24,7 @@
         cursor: pointer;
         user-select: none;
         -webkit-user-select: none;
+        -moz-user-select: none;
       }
       th.asc:after,
       th.desc:after {
@@ -46,13 +48,94 @@
         border-color: #ddd;
         border-width: 0 1px 1px 0;
       }
+      #spreadsheet td {
+        padding: 0;
+      }
+      td div {
+        display: block;
+        padding: 3px 5px;
+      }
+      td input {
+        display: none;
+        margin: 0;
+        padding: 3px 5px;
+        border: none;
+      }
+      .editing td {
+        padding: 0;
+      }
+      .editing td div {
+        display: none;
+      }
+      .editing td input {
+        display: block;
+      }
+      #spreadsheet .menu {
+        text-align: center;
+        padding: 0 3px;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+      }
+      .menu span {
+        display: inline-block;
+        background: url(/img/table.png) no-repeat left;
+        vertical-align: bottom;
+        height: 16px;
+        width: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+      }
+      .menu .add {
+        background-position: -40px 0;
+      }
+      .editing .menu .edit {
+        background-position: -20px 0;
+      }
+      .menu .delete {
+        background-position: -60px 0;
+      }
+      .menu .reorder {
+        background-position: -80px 0;
+        cursor: grab;
+        cursor: -webkit-grab;
+      }
     </style>
   </head>
   <body>
     <a href="/">kganser.com</a>
     <h1>json-table</h1>
     <p>Json-table is a fully customizable client-side table renderer for displaying json data.  At its core, it supports generating a table backed by an array of javascript objects (via optional hooks for generating the table, row, and cell components) and primitive operations on the underlying data (removal, insertion, and sort) that automatically propagate to the DOM.</p>
-    <h2>Basic Example</h2>
+    <pre class="prettyprint">
+$(element).table(data, columns, format);</pre>
+    <p><code>columns</code> is an array of keys representing the columns of the table, which defaults to the set of all keys present in <code>data</code> when omitted.  <code>format</code> is an optional object providing one or more of three formatting hooks:</p>
+    <pre class="prettyprint">
+var format = {
+  table: function(columns, hooks) {
+    // columns is the array of columns provided or generated
+    // hooks is this format object
+    return [outerNode, innerNode];
+  },
+  row: function(value, index) {
+    // value is the object from data at index
+    return [outerNode, innerNode];
+  },
+  cell: function(key, value, index, row) {
+    // index is the column number
+    // row is the parent row's data object
+    return outerNode;
+  }
+};</pre>
+    <p>These hooks return one or two DOM nodes: <code>outerNode</code> is attached to the parent component's <code>innerNode</code>. The resulting json-table supports the following methods.  All but <code>get</code> are chainable.</p>
+    <ul>
+      <li><code>get(row, column)</code> returns value, or object at row if <code>column</code> is omitted, or all data if neither is provided</li>
+      <li><code>insert(object, index)</code> inserts a row at <code>index</code> given its object data, or appends if <code>index</code> is omitted</li>
+      <li><code>insertAll(objects, index)</code> inserts all items in an array of objects, or appends if <code>index</code> is omitted</li>
+      <li><code>remove(index)</code> removes row at <code>index</code></li>
+      <li><code>sort(compare)</code> sorts rows in table with the given comparison function</li>
+    </ul>
+    <h2>Examples</h2>
+    <h3>Basic</h3>
     <p>The most basic example simply generates a table whose columns are the keys of the data array's objects.</p>
     <pre class="prettyprint">
 var data = [
@@ -61,51 +144,128 @@ var data = [
   {Company: 'Facebook', CEO: 'Mark Zuckerberg', Founded: '2004', Headquarters: 'Menlo Park, CA'},
   {Company: 'Apple', CEO: 'Tim Cook', Founded: '1976', Headquarters: 'Cupertino, CA'}
 ];
-$.table(document.getElementById('basic'), data, Object.keys(data[0]));</pre>
+$('#basic').table(data);</pre>
     <div id="basic" class="scroll"></div>
-    <h2>Sorting Headers</h2>
+    <h3>Sorting Headers</h3>
     <p>This example adds sorting functionality to the table by adding <code>onclick</code> handlers to its <code>th</code> elements via a custom <code>cell</code> generator.</p>
     <pre class="prettyprint">
-var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0]), {
+var table = $('#sorting').table(data, null, {
   cell: (function(lastSorted, order) {
     // keep track of last sorted header element and order
-    return function(value, index, key) {
-      // key is undefined for header cells
-      var elem = document.createElement(key ? 'td' : 'th');
-      elem.innerHTML = value;
-      if (!key) elem.onclick = function() {
+    return function(value, index, key, row) {
+      // row is null for header cells
+      var elem = $(row ? '&lt;td>' : '&lt;tr>').text(value);
+      if (!row) elem.click(function() {
         if (lastSorted) lastSorted.className = '';
         order = this == lastSorted ? -order : 1;
         (lastSorted = this).className = order > 0 ? 'asc' : 'desc';
         table.sort(function(a, b) {
           return order * a[value].localeCompare(b[value]);
         });
-      };
-      return elem;
+      });
+      return elem[0];
     };
   })()
 });</pre>
     <div id="sorting" class="scroll"></div>
+    <h3>Spreadsheet</h3>
+    <p>This example uses <a href="/jsml.html">jsml</a> to generate an editable spreadsheet with fixed columns.</p>
+    <pre class="prettyprint">
+var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])), {
+  table: function(columns, hooks) {
+    var body, head = hooks.row(columns, -1);
+    return [$.fn.jsml({table: function(table) {
+      return [
+        {thead: columns.map(function(column) {
+          return {th: column ? column : {className: 'menu', children: [
+            {span: {
+              className: 'edit',
+              title: 'Edit',
+              onclick: function() {
+                table.className = table.className == 'editing' ? '' : 'editing';
+                try { table.getElementsByTagName('input')[0].focus(); } catch (e) {}
+              }
+            }},
+            {span: {
+              className: 'add',
+              title: 'Add Row',
+              onclick: function() {
+                spreadsheet.insert({});
+              }
+            }}
+          ]}}
+        })},
+        {tbody: function(e) { body = e; }}
+      ];
+    }}), body];
+  },
+  cell: function(key, value, index, row) {
+    return $.fn.jsml({td: key
+      ? [{div: value}, {input: {
+          type: 'text',
+          value: value || '',
+          onkeyup: function(e) {
+            row[key] = this.previousSibling.textContent = this.value;
+          }
+        }}]
+      : {className: 'menu', children: [
+          {span: {
+            className: 'reorder',
+            title: 'Reorder',
+            onmousedown: function(e) {
+              var move, up, pos = spreadsheet.get().indexOf(row),
+                  style = document.body.appendChild($.fn.jsml(
+                    {style: {textContent: '* { cursor: -webkit-grabbing !important; cursor: grabbing !important; }'}}
+                  )),
+                  boundaries = Array.prototype.slice.call(this.parentNode.parentNode.parentNode.childNodes, 0, -1).map(function(tr) {
+                    return tr.getBoundingClientRect().bottom;
+                  });
+              document.addEventListener('mousemove', move = function(e) {
+                var i = 0;
+                boundaries.some(function(y) { return e.clientY &lt; y || !++i; });
+                if (pos != i) spreadsheet.remove(pos).insert(row, pos = i);
+                e.preventDefault();
+              });
+              document.addEventListener('mouseup', up = function() {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+                style.parentNode.removeChild(style);
+              });
+            }
+          }},
+          {span: {
+            className: 'delete',
+            title: 'Delete',
+            onclick: function() {
+              spreadsheet.remove(spreadsheet.get().indexOf(row));
+            }
+          }}
+        ]}
+    });
+  }
+});</pre>
+    <div id="spreadsheet" class="scroll"></div>
     <a class="git-banner" href="http://github.com/kganser/json-table"></a>
     <script src="/js/common.js"></script>
     <script src="/js/prettify.js"></script>
     <script src="http://rawgit.com/kganser/kerneljs/master/src/kernel.js"></script>
     <script src="http://rawgit.com/kganser/json-table/master/src/table.js"></script>
+    <script src="http://rawgit.com/kganser/jsml/master/src/jsml.js"></script>
     <script>
-      kernel.use({table: 0}, function($, data) {
+      kernel.use({table: 0, jsml: 0}, function(k, data) {
         var data = [
           {Company: 'Yahoo', CEO: 'Marissa Mayer', Founded: '1994', Headquarters: 'Sunnyvale, CA'},
           {Company: 'Google', CEO: 'Larry Page', Founded: '1998', Headquarters: 'Mountain View, CA'},
           {Company: 'Facebook', CEO: 'Mark Zuckerberg', Founded: '2004', Headquarters: 'Menlo Park, CA'},
           {Company: 'Apple', CEO: 'Tim Cook', Founded: '1976', Headquarters: 'Cupertino, CA'}
         ];
-        $.table(document.getElementById('basic'), data, Object.keys(data[0]));
-        var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0]), {
+        k.table($('basic'), data);
+        var table = k.table($('sorting'), data, null, {
           cell: (function(lastSorted, order) {
-            return function(value, index, key) {
-              var elem = document.createElement(key ? 'td' : 'th');
-              elem.innerHTML = value;
-              if (!key) elem.onclick = function() {
+            return function(key, value, index, row) {
+              var elem = document.createElement(row ? 'td' : 'th');
+              elem.textContent = value;
+              if (!row) elem.onclick = function() {
                 if (lastSorted) lastSorted.className = '';
                 order = this == lastSorted ? -order : 1;
                 (lastSorted = this).className = order > 0 ? 'asc' : 'desc';
@@ -116,6 +276,79 @@ var table = $.table(document.getElementById('sorting'), data, Object.keys(data[0
               return elem;
             };
           })()
+        });
+        var spreadsheet = k.table($('spreadsheet'), data, [''].concat(Object.keys(data[0])), {
+          table: function(columns, hooks) {
+            var body, head = hooks.row(columns, -1);
+            return [k.jsml({table: function(table) {
+              return [
+                {thead: columns.map(function(column) {
+                  return {th: column ? column : {className: 'menu', children: [
+                    {span: {
+                      className: 'edit',
+                      title: 'Edit',
+                      onclick: function() {
+                        table.className = table.className == 'editing' ? '' : 'editing';
+                        try { table.getElementsByTagName('input')[0].focus(); } catch (e) {}
+                      }
+                    }},
+                    {span: {
+                      className: 'add',
+                      title: 'Add Row',
+                      onclick: function() {
+                        spreadsheet.insert({});
+                      }
+                    }}
+                  ]}}
+                })},
+                {tbody: function(e) { body = e; }}
+              ];
+            }}), body];
+          },
+          cell: function(key, value, index, row) {
+            return k.jsml({td: key
+              ? [{div: value}, {input: {
+                  type: 'text',
+                  value: value || '',
+                  onkeyup: function(e) {
+                    row[key] = this.previousSibling.textContent = this.value;
+                  }
+                }}]
+              : {className: 'menu', children: [
+                  {span: {
+                    className: 'reorder',
+                    title: 'Reorder',
+                    onmousedown: function(e) {
+                      var move, up, pos = spreadsheet.get().indexOf(row),
+                          style = document.body.appendChild(k.jsml(
+                            {style: {textContent: '* { cursor: grabbing !important; cursor: -webkit-grabbing !important; }'}}
+                          )),
+                          boundaries = Array.prototype.slice.call(this.parentNode.parentNode.parentNode.childNodes, 0, -1).map(function(tr) {
+                            return tr.getBoundingClientRect().bottom;
+                          });
+                      document.addEventListener('mousemove', move = function(e) {
+                        var i = 0;
+                        boundaries.some(function(y) { return e.clientY < y || !++i; });
+                        if (pos != i) spreadsheet.remove(pos).insert(row, pos = i);
+                        e.preventDefault();
+                      });
+                      document.addEventListener('mouseup', up = function() {
+                        document.removeEventListener('mousemove', move);
+                        document.removeEventListener('mouseup', up);
+                        style.parentNode.removeChild(style);
+                      });
+                    }
+                  }},
+                  {span: {
+                    className: 'delete',
+                    title: 'Delete',
+                    onclick: function() {
+                      spreadsheet.remove(spreadsheet.get().indexOf(row));
+                    }
+                  }}
+                ]}
+            });
+          }
         });
       });
     </script>

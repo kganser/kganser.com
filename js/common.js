@@ -6,6 +6,10 @@ if (!Array.prototype.map) Array.prototype.map = function(fn, ctx) {
   for (var copy = [], i = 0; i < this.length; i++) copy[i] = fn.call(ctx, this[i], i, this);
   return copy;
 };
+if (!Array.prototype.indexOf) Array.prototype.indexOf = function(value, from) {
+  for (var i = (from = from || 0) < 0 ? Math.max(0, this.length + from) : from; i < this.length; i++) if (this[i] === value) return i;
+  return -1;
+};
 if (!Function.prototype.bind) Function.prototype.bind = function(that) {
   var fn = this;
   return function() { fn.apply(that, Array.prototype.slice.call(arguments)); };
