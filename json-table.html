@@ -273,7 +273,7 @@ var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])
                         spreadsheet.insert({}); }}}]}}})},
                 {tbody: function(e) { body = e; }}]; }}), body]; },
           cell: function(key, value, index, row) {
-            return k.jsml({td: row
+            return k.jsml({td: key
               ? [{div: value}, {input: {
                   type: 'text',
                   value: value || '',
