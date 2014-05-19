@@ -42,8 +42,12 @@ pre {
   background-color: #eee;
   overflow: auto;
 }
-table code {
-  white-space: pre;
+pre em {
+  font-family: arial, helvetica, sans-serif;
+}
+table pre {
+  margin: 0;
+  height: 100%;
 }
 code .params {
   color: #666;
