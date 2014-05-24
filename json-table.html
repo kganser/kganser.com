@@ -128,11 +128,11 @@ var format = {
 };</pre>
     <p>These hooks return one or two DOM nodes: <code>outerNode</code> is attached to the parent component's <code>innerNode</code>. The resulting json-table supports the following methods.  All but <code>get</code> are chainable.</p>
     <ul>
-      <li><code>get(row, column)</code> returns value, or object at <code>row</code> if <code>column</code> is omitted, or all data if neither is provided</li>
-      <li><code>insert(object, index)</code> inserts a row at <code>index</code> given its object data, or appends if <code>index</code> is omitted</li>
-      <li><code>insertAll(objects, index)</code> inserts all items in an array of objects, or appends if <code>index</code> is omitted</li>
-      <li><code>remove(index)</code> removes row at <code>index</code></li>
-      <li><code>sort(compare)</code> sorts rows in table with the given comparison function</li>
+      <li><code>get<span class="params">(row, column)</span></code> returns value at cell, or object at <code>row</code> if <code>column</code> is omitted, or all data if neither is provided</li>
+      <li><code>insert<span class="params">(object, index)</span></code> inserts a row at <code>index</code> given its object data, or appends if <code>index</code> is omitted</li>
+      <li><code>insertAll<span class="params">(objects, index)</span></code> inserts all items in an array of objects, or appends if <code>index</code> is omitted</li>
+      <li><code>remove<span class="params">(index)</span></code> removes row at <code>index</code></li>
+      <li><code>sort<span class="params">(compare)</span></code> sorts rows in table with the given comparison function</li>
     </ul>
     <h2>Examples</h2>
     <h3>Basic</h3>
