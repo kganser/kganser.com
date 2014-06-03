@@ -25,7 +25,7 @@
     <pre class="prettyprint">$.jscc(grammar, start, tokens);</pre>
     <p>A call to <code>jscc</code> specifies the calculator's <code>grammar</code>, the <code>start</code> symbol for the grammar, and an optional <code>tokens</code> object.  The call returns a function that parses a given string, calling the associated handler functions on any reduction steps.  When called without an argument, this function returns a compact, JSON-serializable representation of the state machine generated for the grammar, which can be supplied in place of <code>start</code> to <code>jscc</code> (along with the same <code>grammar</code>) to efficiently return the same parser function.</p>
     <pre class="prettyprint">
-var machine = $jscc(grammar, start)(); // JSON-serializable; suitable for hard-coding
+var machine = $.jscc(grammar, start)(); // JSON-serializable; suitable for hard-coding
 $.jscc(grammar, machine, tokens);</pre>
     <h2>Example</h2>
     <p>Below is a call to <code>jscc</code> that creates a parser for a simple calculator.</p>
