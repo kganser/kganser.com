@@ -224,19 +224,18 @@ var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])
     <a class="git-banner" href="http://github.com/kganser/json-table"></a>
     <script src="/js/common.js"></script>
     <script src="/js/prettify.js"></script>
-    <script src="http://rawgit.com/kganser/kerneljs/master/src/kernel.js"></script>
     <script src="http://rawgit.com/kganser/json-table/master/src/table.js"></script>
     <script src="http://rawgit.com/kganser/jsml/master/src/jsml.js"></script>
     <script>
-      kernel.use({table: 0, jsml: 0}, function(k, data) {
+      (function() {
         var data = [
           {Company: 'Yahoo', CEO: 'Marissa Mayer', Founded: '1994', Headquarters: 'Sunnyvale, CA'},
           {Company: 'Google', CEO: 'Larry Page', Founded: '1998', Headquarters: 'Mountain View, CA'},
           {Company: 'Facebook', CEO: 'Mark Zuckerberg', Founded: '2004', Headquarters: 'Menlo Park, CA'},
           {Company: 'Apple', CEO: 'Tim Cook', Founded: '1976', Headquarters: 'Cupertino, CA'}
         ];
-        k.table($('basic'), data);
-        var table = k.table($('sorting'), data, null, {
+        table($('basic'), data);
+        var sortable = table($('sorting'), data, null, {
           cell: (function(lastSorted, order) {
             return function(key, value, index, row) {
               var elem = document.createElement(row ? 'td' : 'th');
@@ -245,7 +244,7 @@ var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])
                 if (lastSorted) lastSorted.className = '';
                 order = this == lastSorted ? -order : 1;
                 (lastSorted = this).className = order > 0 ? 'asc' : 'desc';
-                table.sort(function(a, b) {
+                sortable.sort(function(a, b) {
                   return order * a[value].localeCompare(b[value]);
                 });
               };
@@ -253,10 +252,10 @@ var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])
             };
           })()
         });
-        var spreadsheet = k.table($('spreadsheet'), data, [''].concat(Object.keys(data[0])), {
+        var spreadsheet = table($('spreadsheet'), data, [''].concat(Object.keys(data[0])), {
           table: function(columns, hooks) {
             var body, head = hooks.row(columns, -1);
-            return [k.jsml({table: function(table) {
+            return [jsml({table: function(table) {
               return [
                 {thead: columns.map(function(column) {
                   return {th: column ? column : {className: 'menu', children: [
@@ -273,7 +272,7 @@ var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])
                         spreadsheet.insert({}); }}}]}}})},
                 {tbody: function(e) { body = e; }}]; }}), body]; },
           cell: function(key, value, index, row) {
-            return k.jsml({td: key
+            return jsml({td: key
               ? [{div: value}, {input: {
                   type: 'text',
                   value: value || '',
@@ -285,7 +284,7 @@ var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])
                     title: 'Reorder',
                     onmousedown: function(e) {
                       var move, up, pos = spreadsheet.get().indexOf(row),
-                          style = document.body.appendChild(k.jsml(
+                          style = document.body.appendChild(jsml(
                             {style: {textContent: '* { cursor: grabbing !important; cursor: -webkit-grabbing !important; }'}})),
                           boundaries = Array.prototype.slice.call(this.parentNode.parentNode.parentNode.childNodes, 0, -1).map(function(tr) {
                             return tr.getBoundingClientRect().bottom; });
@@ -303,7 +302,7 @@ var spreadsheet = $('#spreadsheet').table(data, [''].concat(Object.keys(data[0])
                     title: 'Delete',
                     onclick: function() {
                       spreadsheet.remove(spreadsheet.get().indexOf(row)); }}}]}}); }});
-      });
+      })();
     </script>
   </body>
 </html>
