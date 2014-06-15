@@ -225,25 +225,27 @@
             pick(paths[i]/2-8 << 0, picks[paths[i]/2 << 0]); // propagate
           } else if (picks[i] == null || picks[i+1] == null) {
             remaining--;
-            var team = teams[i/2][value];
             picks[picks[i] == null ? i : ++i] = value;
             elems[group*4+value].className = 'winner';
-            jsml({span: {className: team.toLowerCase().replace(' ', '-'), children: team}}, elems[paths[i]]);
+            elems[paths[i]].innerHTML = elems[group*4+value].innerHTML;
             pick(paths[i]/2-8 << 0, picks[paths[i]/2 << 0]); // propagate
           }
         } else {
-          var i = group-8,
-              winner = elems[i*2+32+value],
-              loser = elems[i*2+33-value];
-          if (picks[i+16] == null) remaining--;
-          picks[i+16] = value;
+          var i = group+8,
+              winner = elems[group*2+16+value],
+              loser = elems[group*2+17-value];
+          if (picks[i] == null) remaining--;
+          picks[i] = value;
           winner.className = 'winner';
           loser.className = '';
-          if (i < 14) {
-            elems[paths[i+16]].innerHTML = winner.innerHTML;
-            if (i > 11) elems[paths[i+18]].innerHTML = loser.innerHTML;
+          if (group < 22) {
+            elems[paths[i]].innerHTML = winner.innerHTML;
+            if (group > 19) {
+              elems[paths[i+2]].innerHTML = loser.innerHTML;
+            } else {
+              pick(paths[i]/2-8 << 0, picks[paths[i]/2 << 0]); // propagate
+            }
           }
-          if (group < 20) pick(paths[i+16]/2-8 << 0, picks[paths[i+16]/2 << 0]); // propagate
         }
         if (!remaining) {
           document.location.hash = span(12).map(function(x, i) {
