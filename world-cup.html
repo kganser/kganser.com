@@ -195,7 +195,7 @@
   </style>
 </head>
 <body>
-  <!--script src="/js/common.js"></script-->
+  <script src="/js/common.js"></script>
   <script src="http://rawgit.com/kganser/jsml/master/src/jsml.js"></script>
   <script>
     (function() {
@@ -213,7 +213,6 @@
             ['Belgium', 'Algeria', 'Russia', 'South Korea']];
       
       var pick = function(group, value) {
-        // TODO: propagate updates
         if (value == null) return;
         if (group < 8) {
           var i = group*2;
@@ -253,8 +252,8 @@
               : picks.slice((i-8)*4+16, (i-8)*4+20).map(function(pick, i) { return pick << i; }).reduce(function(a, b) { return a | b; }, 0)
             ).toString(16);
           }).join('');
-          link.innerHTML = url = 'kganser.com/world-cup'+document.location.hash;
-          link.href = 'http://'+url;
+          link.href = url = 'http://kganser.com/world-cup'+document.location.hash;
+          link.innerHTML = url.substr(7);
           link.style.display = 'block';
         } else {
           document.location.hash = '';
