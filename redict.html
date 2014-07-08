@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kganser.com - redict</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Regular expression dictionary lookup">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body, input {
+        margin: 0;
+        font-family: "Lucida Console", Monaco, monospace;
+        font-size: 24px;
+      }
+      header {
+        color: white;
+        background: #222;
+        text-align: center;
+        padding: 10px 0;
+      }
+      input {
+        background: #e6e6e6;
+        border: 0;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .error {
+        color: #a00;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      li {
+        padding: 10px;
+        border-bottom: solid 1px #e6e6e6;
+      }
+    </style>
+  </head>
+  <body>
+    <header>re/dict/</header>
+    <input type="text" disabled="disabled" spellcheck="false" id="regex">
+    <ul id="results"></ul>
+    <script src="/js/common.js"></script>
+    <script>
+      (function() {
+        var results = $('results'),
+            input = $('regex'),
+            value, i = 0, j;
+        
+        var request = new XMLHttpRequest();
+        request.onload = function() {
+          if (this.status == 200) {
+            input.disabled = false;
+            input.focus();
+            words = this.responseText.split('\n').slice(1).map(function(word) { return word.split('/')[0]; });
+          }
+        };
+        request.open('get', '/data/dict.txt');
+        request.send();
+        
+        input.onkeyup = function() {
+          if (this.value == value) return;
+          this.className = '';
+          results.innerHTML = '';
+          try {
+            var re = (value = this.value) && new RegExp(value);
+            if (!re) return;
+            i++; j = 0;
+            setTimeout(function() {
+              if (!--i) words.some(function(word) {
+                var match = re.exec(word);
+                if (match) {
+                  results.appendChild(document.createElement('li')).innerHTML =
+                    word.substr(0, match.index) +
+                    '<u>'+match[0]+'</u>' +
+                    word.substr(match.index+match[0].length);
+                  return ++j == 100;
+                }
+              });
+            }, 500);
+          } catch (e) {
+            this.className = 'error';
+          }
+        };
+      })();
+    </script>
+  </body>
+</html>

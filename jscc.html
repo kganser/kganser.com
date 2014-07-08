@@ -106,7 +106,7 @@ var calculate = $.jscc({
           document.getElementById('tree').innerHTML = (function print(branch, indent, last) {
             var n = last != undefined ? last ? ['└', ' '] : ['├', '│'] : ['', ''];
             if (typeof branch == 'string')
-                return indent+n[0]+'"'+branch+'"\n';
+              return indent+n[0]+'"'+branch+'"\n';
             return indent+n[0]+branch.tree[0]+'\n'+branch.tree.slice(1).map(function(i, j, k) {
               return print(i, indent+(n[1]), j == k.length-1);
             }).join('');
