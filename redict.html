@@ -69,10 +69,10 @@
           results.innerHTML = '';
           value = this.value;
           try {
+            var match, re = new RegExp(value);
             i++; j = 0;
             setTimeout(function() {
               if (!--i && value) {
-                var match, re = new RegExp(value);
                 words.some(function(word) {
                   if (match = re.exec(word)) {
                     results.appendChild(document.createElement('li')).innerHTML =
