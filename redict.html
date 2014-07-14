@@ -39,6 +39,13 @@
         padding: 10px;
         border-bottom: solid 1px #e6e6e6;
       }
+      .label {
+        font-family: arial, helvetica, sans-serif;
+        font-size: 20px;
+        color: #666;
+        text-align: center;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -50,18 +57,23 @@
       (function() {
         var results = $('results'),
             input = $('regex'),
-            value, i = 0, j;
+            keystrokes = 0,
+            value;
         
         var request = new XMLHttpRequest();
         request.onload = function() {
           if (this.status == 200) {
             input.disabled = false;
             input.focus();
-            words = this.responseText.split('\n').slice(1).map(function(word) { return word.split('/')[0]; });
+            words = this.responseText.split('\n');
           }
         };
-        request.open('get', '/data/dict.txt');
+        request.open('get', '/data/2of12dict.txt');
         request.send();
+        
+        var underline = function(match) {
+          return match.input.substr(0, match.index)+'<u>'+match[0]+'</u>'+match.input.substr(match.index+match[0].length);
+        };
         
         input.onkeyup = function() {
           if (value == this.value) return;
@@ -69,19 +81,33 @@
           results.innerHTML = '';
           value = this.value;
           try {
-            var match, re = new RegExp(value);
-            i++; j = 0;
+            var re = new RegExp(value),
+                match, extras = [],
+                displayed = 0;
+            keystrokes++;
             setTimeout(function() {
-              if (!--i && value) {
-                words.some(function(word) {
-                  if (match = re.exec(word)) {
-                    results.appendChild(document.createElement('li')).innerHTML =
-                      word.substr(0, match.index) +
-                      '<u>'+match[0]+'</u>' +
-                      word.substr(match.index+match[0].length);
-                    return ++j == 100;
+              if (!--keystrokes && value) {
+                words.forEach(function(word) {
+                  var match = re.exec(word);
+                  if (match) {
+                    if (++displayed < 100) {
+                      results.appendChild(document.createElement('li')).innerHTML = underline(match);
+                    } else {
+                      extras.push(word);
+                    }
                   }
                 });
+                if (extras.length) {
+                  var elem = results.appendChild(document.createElement('li'));
+                  elem.className = 'label';
+                  elem.textContent = extras.length == 1 ? '1 more match' : extras.length+' more matches';
+                  elem.onclick = function() {
+                    results.removeChild(elem);
+                    extras.forEach(function(word) {
+                      results.appendChild(document.createElement('li')).innerHTML = underline(re.exec(word));
+                    });
+                  }
+                }
               }
             }, 500);
           } catch (e) {
