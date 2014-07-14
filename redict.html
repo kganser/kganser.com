@@ -24,6 +24,9 @@
         width: 100%;
         box-sizing: border-box;
       }
+      input:focus {
+        outline: 0;
+      }
       .error {
         color: #a00;
       }
@@ -61,24 +64,25 @@
         request.send();
         
         input.onkeyup = function() {
-          if (this.value == value) return;
+          if (value == this.value) return;
           this.className = '';
           results.innerHTML = '';
+          value = this.value;
           try {
-            var re = (value = this.value) && new RegExp(value);
-            if (!re) return;
             i++; j = 0;
             setTimeout(function() {
-              if (!--i) words.some(function(word) {
-                var match = re.exec(word);
-                if (match) {
-                  results.appendChild(document.createElement('li')).innerHTML =
-                    word.substr(0, match.index) +
-                    '<u>'+match[0]+'</u>' +
-                    word.substr(match.index+match[0].length);
-                  return ++j == 100;
-                }
-              });
+              if (!--i && value) {
+                var match, re = new RegExp(value);
+                words.some(function(word) {
+                  if (match = re.exec(word)) {
+                    results.appendChild(document.createElement('li')).innerHTML =
+                      word.substr(0, match.index) +
+                      '<u>'+match[0]+'</u>' +
+                      word.substr(match.index+match[0].length);
+                    return ++j == 100;
+                  }
+                });
+              }
             }, 500);
           } catch (e) {
             this.className = 'error';
