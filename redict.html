@@ -50,7 +50,7 @@
   </head>
   <body>
     <header>re/dict/</header>
-    <input type="text" disabled="disabled" spellcheck="false" id="regex">
+    <input type="text" disabled="disabled" placeholder="loading…" spellcheck="false" id="regex">
     <ul id="results"></ul>
     <script src="/js/common.js"></script>
     <script>
@@ -64,6 +64,7 @@
         request.onload = function() {
           if (this.status == 200) {
             input.disabled = false;
+            input.placeholder = 'search';
             input.focus();
             words = this.responseText.split('\n');
           }
@@ -106,7 +107,7 @@
                     extras.forEach(function(word) {
                       results.appendChild(document.createElement('li')).innerHTML = underline(re.exec(word));
                     });
-                  }
+                  };
                 }
               }
             }, 500);
