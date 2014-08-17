@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kganser.com - device art generator</title>
+    <meta charset="utf-8">
+    <meta name="description" content="An in-browser device art generator for screenshots on various mobile devices.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/common.css">
+    <style>
+      #devices {
+        padding: 0;
+      }
+      #devices li {
+        display: inline-block;
+        width: 150px;
+        text-align: center;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+      #devices li div {
+        height: 150px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin-bottom: 3px;
+        transition: opacity .5s;
+        opacity: .6;
+      }
+      #devices li span {
+        font-size: 11px;
+      }
+      #devices li.place div {
+        opacity: 1;
+      }
+      #canvas {
+        display: none;
+      }
+      #result {
+        display: block;
+        float: right;
+        margin-left: 100px;
+        width: 200px;
+        min-height: 400px;
+      }
+      #result img {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/">kganser.com</a>
+    <h1>device art generator</h1>
+    <p>Drag a screenshot from your computer to any of the devices below to generate device artwork for your app.  See Android's <a href="http://developer.android.com/distribute/tools/promote/device-art.html" target="_blank">device art generator</a> for other devices and options.</p>
+    <a id="result" target="_blank"></a>
+    <ul id="devices"></ul>
+    <canvas id="canvas"></canvas>
+    <script src="/js/common.js"></script>
+    <script src="http://rawgit.com/kganser/jsml/master/src/jsml.js"></script>
+    <script>
+      (function() {
+        if (!(window.File && window.FileReader && window.FileList && window.Blob))
+          return alert('Sorry, your browser does not support the necessary HTML5 APIs.\nTry using the latest version of Chrome.');
+        
+        var canvas = $('canvas'),
+            c = canvas.getContext('2d'),
+            result = $('result');
+        
+        jsml([{
+          name: 'iPhone 5s',
+          src: 'iphone5s',
+          credit: 'http://commons.wikimedia.org/wiki/File:IPhone_5s_Black.png',
+          dimensions: [640, 1136],
+          origin: [65, 235],
+          glow: {
+            points: [[423, 235], [705, 235], [705, 1040]],
+            opacity: [0, .5]
+          }
+        }, {
+          name: 'iPhone 5s (white)',
+          src: 'iphone5s-white',
+          credit: 'http://commons.wikimedia.org/wiki/File:IPhone_5s.png',
+          dimensions: [640, 1136],
+          origin: [65, 235],
+          glow: {
+            points: [[423, 235], [705, 235], [705, 1040]],
+            opacity: [0, .5]
+          }
+        }, {
+          name: 'iPhone 5',
+          src: 'iphone5',
+          credit: 'http://commons.wikimedia.org/wiki/File:IPhone_5.png',
+          dimensions: [640, 1136],
+          origin: [63, 231],
+          glow: {
+            points: [[403, 231], [703, 231], [703, 1087]],
+            opacity: [.5, 0]
+          }
+        }, {
+          name: 'iPhone 4',
+          src: 'iphone4',
+          credit: 'http://commons.wikimedia.org/wiki/File:IPhone_4_Mock_No_Shadow_PSD.png',
+          dimensions: [640, 960],
+          origin: [63, 263],
+          glow: {
+            points: [[440, 263], [703, 263], [703, 960]],
+            opacity: [.5, 0]
+          }
+        }].map(function(device) {
+          return {li: {
+            ondragover: function() { this.className = 'place'; return false; },
+            ondragleave: function() { this.className = ''; return false; },
+            ondrop: function(e) {
+              e.preventDefault();
+              this.className = '';
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                var loaded = 0;
+                var images = ['/img/'+device.src+'.png', e.target.result].map(function(src, i) {
+                  var image = new Image();
+                  image.src = src;
+                  image.onload = function() {
+                    if (i && (image.width != device.dimensions[0] || image.height != device.dimensions[1])) {
+                      alert('Screenshot image must be '+device.dimensions[0]+'×'+device.dimensions[1]+' pixels');
+                      loaded = 0;
+                      return;
+                    } else if (!i) {
+                      canvas.width = image.width;
+                      canvas.height = image.height;
+                    }
+                    if (++loaded < images.length) return;
+                    c.clearRect(0, 0, canvas.width, canvas.height);
+                    result.innerHTML = '';
+                    c.drawImage(images[0], 0, 0);
+                    c.drawImage(images[1], device.origin[0], device.origin[1]);
+                    if (device.glow && device.glow.points && device.glow.points.length > 2 && device.glow.opacity) {
+                      c.beginPath();
+                      c.moveTo(device.glow.points[0][0], device.glow.points[0][1]);
+                      device.glow.points.slice(1).forEach(function(point) {
+                        c.lineTo(point[0], point[1]);
+                      });
+                      
+                      var grad = c.createLinearGradient(0, 0, canvas.width, canvas.height);
+                      grad.addColorStop(0, 'rgba(255, 255, 255, '+device.glow.opacity[0]+')');
+                      grad.addColorStop(1, 'rgba(255, 255, 255, '+device.glow.opacity[1]+')');
+                      c.fillStyle = grad;
+                      c.fill();
+                    }
+                    var data = canvas.toDataURL('image/png');
+                    jsml({img: {src: data}}, result);
+                    result.href = data;
+                  };
+                  return image;
+                });
+              };
+              reader.readAsDataURL(e.dataTransfer.files[0]);
+              return false;
+            },
+            children: [
+              {div: {style: {backgroundImage: 'url(/img/'+device.src+'.png)'}}},
+              device.name,
+              {br: null},
+              {span: [
+                device.dimensions[0]+'×'+device.dimensions[1]+'px ',
+                {a: {href: device.credit, target: '_blank', children: 'source'}}
+              ]}
+            ]
+          }};
+        }), $('devices'));
+      })();
+    </script>
+  </body>
+</html>

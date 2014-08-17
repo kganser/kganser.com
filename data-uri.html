@@ -38,19 +38,21 @@
     <ul id="output"></ul>
     <script src="/js/common.js"></script>
     <script>
-      if (!(window.File && window.FileReader && window.FileList && window.Blob))
-        return alert('Sorry, your browser does not support the necessary HTML5 APIs.\nTry using the latest version of Chrome.');
-      $('clear').onclick = function() { $('output').innerHTML = ''; };
-      $('files').onchange = function(e) {
-        Array.prototype.slice.call(e.target.files).forEach(function(file) {
-          if (!file.type.match('image.*')) return;
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            $('output').innerHTML += '<li><img src="'+e.target.result+'" title="'+file.name+'"><textarea>'+e.target.result+'</textarea></li>';
-          };
-          reader.readAsDataURL(file);
-        });
-      };
+      (function() {
+        if (!(window.File && window.FileReader && window.FileList && window.Blob))
+          return alert('Sorry, your browser does not support the necessary HTML5 APIs.\nTry using the latest version of Chrome.');
+        $('clear').onclick = function() { $('output').innerHTML = ''; };
+        $('files').onchange = function(e) {
+          Array.prototype.slice.call(e.target.files).forEach(function(file) {
+            if (!file.type.match('image.*')) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              $('output').innerHTML += '<li><img src="'+e.target.result+'" title="'+file.name+'"><textarea>'+e.target.result+'</textarea></li>';
+            };
+            reader.readAsDataURL(file);
+          });
+        };
+      })();
     </script>
   </body>
 </html>
