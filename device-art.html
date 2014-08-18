@@ -161,6 +161,7 @@
               return false;
             },
             onclick: function(e) {
+              if (e.target.tagName == 'A') return;
               var device = this;
               upload.onchange = function(f) {
                 f.dataTransfer = f.target;
