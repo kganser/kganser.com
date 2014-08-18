@@ -9,6 +9,7 @@
     <style>
       #devices {
         padding: 0;
+        max-width: 450px;
       }
       #devices li {
         display: inline-block;
@@ -16,6 +17,7 @@
         text-align: center;
         font-size: 12px;
         margin-bottom: 10px;
+        cursor: pointer;
       }
       #devices li div {
         height: 150px;
@@ -29,18 +31,17 @@
       #devices li span {
         font-size: 11px;
       }
-      #devices li.place div {
+      #devices li:hover div,
+      #devices li.hover div {
         opacity: 1;
       }
-      #canvas {
+      #canvas, #upload {
         display: none;
       }
       #result {
         display: block;
         float: right;
-        margin-left: 100px;
         width: 200px;
-        min-height: 400px;
       }
       #result img {
         width: 100%;
@@ -51,8 +52,9 @@
   <body>
     <a href="/">kganser.com</a>
     <h1>device art generator</h1>
-    <p>Drag a screenshot from your computer to any of the devices below to generate device artwork for your app.  Click the generated image to see and download it at full resolution.  See Android's <a href="http://developer.android.com/distribute/tools/promote/device-art.html" target="_blank">device art generator</a> for other devices and options.</p>
+    <p>Click or drag a screenshot from your computer to any of the devices below to generate device artwork for your app.  Click the generated image to see and download it at full resolution.  See Android's <a href="http://developer.android.com/distribute/tools/promote/device-art.html" target="_blank">device art generator</a> for other devices and options.</p>
     <a id="result" target="_blank"></a>
+    <input type="file" id="upload">
     <ul id="devices"></ul>
     <canvas id="canvas"></canvas>
     <script src="/js/common.js"></script>
@@ -64,6 +66,7 @@
         
         var canvas = $('canvas'),
             c = canvas.getContext('2d'),
+            upload = $('upload'),
             result = $('result');
         
         jsml([{
@@ -108,12 +111,15 @@
           }
         }].map(function(device) {
           return {li: {
-            ondragover: function() { this.className = 'place'; return false; },
+            ondragover: function() { this.className = 'hover'; return false; },
             ondragleave: function() { this.className = ''; return false; },
             ondrop: function(e) {
               e.preventDefault();
               this.className = '';
-              var reader = new FileReader();
+              var file = e.dataTransfer.files[0],
+                  reader = new FileReader();
+              if (file.type != 'image/png')
+                return alert('File must be of type image/png');
               reader.onload = function(e) {
                 var loaded = 0;
                 var images = ['/img/'+device.src+'.png', e.target.result].map(function(src, i) {
@@ -153,8 +159,16 @@
                   return image;
                 });
               };
-              reader.readAsDataURL(e.dataTransfer.files[0]);
+              reader.readAsDataURL(file);
               return false;
+            },
+            onclick: function(e) {
+              var device = this;
+              upload.onchange = function(f) {
+                f.dataTransfer = f.target;
+                device.ondrop.call(device, f);
+              };
+              upload.click();
             },
             children: [
               {div: {style: {backgroundImage: 'url(/img/'+device.src+'.png)'}}},
