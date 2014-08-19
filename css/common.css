@@ -64,6 +64,15 @@ code .params {
   height: 149px;
   background-image: url(https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png);
 }
+.jquery {
+  color: black;
+  font-size: 15px;
+  font-weight: normal;
+}
+.jquery em {
+  color: #116cb3;
+  font-weight: bold;
+}
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
   .git-banner {
     width: 75px;
