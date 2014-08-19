@@ -39,12 +39,10 @@
         display: none;
       }
       #result {
-        display: block;
         float: right;
-        width: 200px;
       }
       #result img {
-        width: 100%;
+        width: 200px;
         height: auto;
       }
     </style>
@@ -52,8 +50,8 @@
   <body>
     <a href="/">kganser.com</a>
     <h1>device art generator</h1>
-    <p>Click or drag a screenshot from your computer to any of the devices below to generate device artwork for your app.  Click the generated image to see and download it at full resolution.  See Android's <a href="http://developer.android.com/distribute/tools/promote/device-art.html" target="_blank">device art generator</a> for other devices and options.</p>
-    <a id="result" target="_blank"></a>
+    <p>Click or drag a screenshot from your computer to any of the devices below to generate device artwork for your app.  Right-click or ctrl-click the generated image copy it to your clipboard at full resolution.  See Android's <a href="http://developer.android.com/distribute/tools/promote/device-art.html" target="_blank">device art generator</a> for other devices and options.</p>
+    <div id="result"></div>
     <input type="file" accept="image/*" id="upload">
     <ul id="devices"></ul>
     <canvas id="canvas"></canvas>
@@ -66,8 +64,7 @@
         
         var canvas = $('canvas'),
             c = canvas.getContext('2d'),
-            upload = $('upload'),
-            result = $('result');
+            upload = $('upload');
         
         jsml([{
           name: 'iPhone 5s',
@@ -77,7 +74,7 @@
           origin: [65, 235],
           glow: {
             points: [[423, 235], [705, 235], [705, 1040]],
-            opacity: [0, .5]
+            opacity: {0:0, 1:.5}
           }
         }, {
           name: 'iPhone 5s (white)',
@@ -87,7 +84,17 @@
           origin: [65, 235],
           glow: {
             points: [[423, 235], [705, 235], [705, 1040]],
-            opacity: [0, .5]
+            opacity: {0:0, 1:.5}
+          }
+        }, {
+          name: 'iPad Air',
+          src: 'ipad3',
+          credit: 'http://commons.wikimedia.org/wiki/File:IPad_Air.png',
+          dimensions: [1536, 2048],
+          origin: [95, 264],
+          glow: {
+            points: [[858, 264], [1631, 264], [1631, 2000]],
+            opacity: {0:.7, .7:0}
           }
         }, {
           name: 'iPhone 5',
@@ -97,7 +104,7 @@
           origin: [63, 231],
           glow: {
             points: [[403, 231], [703, 231], [703, 1087]],
-            opacity: [.5, 0]
+            opacity: {0:.5, 1:0}
           }
         }, {
           name: 'iPhone 4',
@@ -107,7 +114,7 @@
           origin: [63, 263],
           glow: {
             points: [[440, 263], [703, 263], [703, 960]],
-            opacity: [.5, 0]
+            opacity: {0:.5, 1:0}
           }
         }].map(function(device) {
           return {li: {
@@ -145,14 +152,13 @@
                       });
                       
                       var grad = c.createLinearGradient(0, 0, canvas.width, canvas.height);
-                      grad.addColorStop(0, 'rgba(255, 255, 255, '+device.glow.opacity[0]+')');
-                      grad.addColorStop(1, 'rgba(255, 255, 255, '+device.glow.opacity[1]+')');
+                      Object.keys(device.glow.opacity).forEach(function(stop) {
+                        grad.addColorStop(stop, 'rgba(255, 255, 255, '+device.glow.opacity[stop]+')');
+                      });
                       c.fillStyle = grad;
                       c.fill();
                     }
-                    var data = canvas.toDataURL('image/png');
-                    jsml({img: {src: data}}, result);
-                    result.href = data;
+                    jsml({img: {src: canvas.toDataURL('image/png')}}, $('result'));
                   };
                   return image;
                 });
