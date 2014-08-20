@@ -154,7 +154,7 @@ var table = $('#sorting').table(data, null, {
     // keep track of last sorted header element and order
     return function(value, index, key, row) {
       // row is null for header cells
-      var elem = $(row ? '&lt;td>' : '&lt;tr>').text(value);
+      var elem = $(row ? '&lt;td>' : '&lt;th>').text(value);
       if (!row) elem.click(function() {
         if (lastSorted) lastSorted.className = '';
         order = this == lastSorted ? -order : 1;
