@@ -20,9 +20,9 @@
         text-align: right;
       }
       header {
-        background: #333;
+        background: #4A5054;
         color: white;
-        box-shadow: inset 0 -50px 50px -50px black;
+        box-shadow: inset 0 -50px 50px -50px rgba(0,0,0,.2);
         text-shadow: 2px 2px 10px black;
       }
       header .wrapper {
@@ -44,19 +44,25 @@
         font-weight: 400;
         margin: 0;
       }
-      #badge {
-        width: 86px;
-        height: 30px;
+      .badge {
+        width: auto;
+        height: 40px;
       }
-      img {
-        width: 133px;
-        height: auto;
+      .screenshots {
+        list-style: none;
+        padding: 0;
+        text-align: center;
       }
-      #main {
-        float: right;
+      .screenshots li {
+        display: inline-block;
+        margin: 20px;
       }
-      #main img {
-        width: 300px;
+      .screenshots img {
+        height: 200px;
+        width: auto;
+      }
+      .screenshots .large img {
+        height: 400px;
       }
       @media only screen and (max-width: 600px) {
         body {
@@ -74,11 +80,9 @@
           margin: -20px 0 0 -160px;
           background-size: 150px 240px;
         }
-        img, #main img {
+        .screenshots img, .screenshots .large img {
           width: 100%;
-        }
-        #main {
-          float: none;
+          height: auto;
         }
       }
     </style>
@@ -88,13 +92,17 @@
       <div class="wrapper">
         <h1>Charge</h1>
         <p>Car charging stations and up-to-the-minute availability at a glance.</p>
-        <a href="https://play.google.com/store/apps/details?id=com.kganser.charge"><img id="badge" alt="Get it on Google Play" src="http://developer.android.com/images/brand/en_generic_rgb_wo_60.png" /></a>
+        <a href="https://itunes.apple.com/us/app/charge./id909964161?mt=8&uo=4" target="itunes_store"><img class="badge" alt="Download on the App Store" src="https://linkmaker.itunes.apple.com/htmlResources/assets/en_us//images/web/linkmaker/badge_appstore-lrg.png"></a>
+        <a href="https://play.google.com/store/apps/details?id=com.kganser.charge"><img class="badge" alt="Get it on Google Play" src="http://developer.android.com/images/brand/en_generic_rgb_wo_60.png"></a>
       </div>
     </header>
     <div class="wrapper">
-      <a id="main" href="/img/charge-ss-1.png"><img src="/img/charge-ss-1.png"></a><br>
-      <a href="/img/charge-ss-2.png"><img src="/img/charge-ss-2.png"></a><br>
-      <a href="/img/charge-ss-3.png"><img src="/img/charge-ss-3.png"></a>
+      <ul class="screenshots">
+        <li><a href="/img/charge-iphone-2.png"><img src="/img/charge-iphone-2.png"></a></li>
+        <li><a href="/img/charge-iphone-3.png"><img src="/img/charge-iphone-3.png"></a></li>
+        <li class="large"><a href="/img/charge-iphone-1.png"><img src="/img/charge-iphone-1.png"></a></li>
+        <li class="large"><a href="/img/charge-android-1.png"><img src="/img/charge-android-1.png"></a></li>
+      </div>
     </div>
     <script src="/js/common.js"></script>
   </body>
