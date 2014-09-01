@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kganser.com - jsonv</title>
+    <meta charset="utf-8">
+    <meta name="description" content="A library and Chrome extension for visualizing JSON data.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/prettify.css">
+    <link rel="stylesheet" href="http://rawgit.com/kganser/jsonv/master/lib/jsonv.css">
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/cgffjielkgfdhoiloknkfcimejepaodg">
+  </head>
+  <body>
+    <a href="/">kganser.com</a>
+    <h1>jsonv</h1>
+    <p>Jsonv is a library and Chrome extension for visualizing JSON data.  The Chrome extension for raw JSON documents is available on the <a href="https://chrome.google.com/webstore/detail/cgffjielkgfdhoiloknkfcimejepaodg" target="_blank">Chrome Web Store</a>.</p>
+    <h2>Library</h2>
+    <p>To render JSON snippets in page, simply include the stylesheet and script in your page and apply a <code>jsonv</code> class name to an element with JSON content.</p>
+    <pre class="prettyprint">
+&lt;!-- in head tag -->
+&lt;link rel="stylesheet" href="//rawgit.com/kganser/jsonv/master/lib/jsonv.css">
+
+&lt;!-- before closing body tag -->
+&lt;script src="//rawgit.com/kganser/jsonv/master/lib/jsonv.js">&lt;/script></pre>
+    <pre class="prettyprint">
+&lt;pre class="jsonv">
+{
+  "string": "hello world",
+  "number": 123,
+  "null": null,
+  "object": {
+    "key": "value"
+  },
+  "array": [
+    "element"
+  ]
+}
+&lt;/pre></pre>
+    <pre class="jsonv" style="background-color: transparent; border: solid 1px #eee">
+{
+  "string": "hello world",
+  "number": 123,
+  "null": null,
+  "object": {
+    "key": "value"
+  },
+  "array": [
+    "element"
+  ]
+}</pre>
+    <p>You can also explicitly render an element's JSON content by calling <code>jsonv</code>.  Note that the element must still be styled according to the jsonv stylesheet.</p>
+    <pre class="prettyprint">jsonv(document.getElementById('json'));</pre>
+    <a class="git-banner" href="http://github.com/kganser/jsonv"></a>
+    <script src="/js/common.js"></script>
+    <script src="/js/prettify.js"></script>
+    <script src="http://rawgit.com/kganser/jsonv/master/lib/jsonv.js"></script>
+  </body>
+</html>
