@@ -20,7 +20,8 @@ p, li {
   margin: -15px -10px 0 -10px;
 }
 .profile p {
-  background-color: #eee;
+  border: solid 1px #ddd;
+  background: #f7f7f7;
   padding: 10px;
   margin-top: 0;
 }
@@ -39,7 +40,11 @@ code, pre {
 }
 pre {
   padding: 2px 5px;
-  background-color: #eee;
+  border: solid 1px #ddd;
+  background: #f7f7f7;
+  overflow: hidden;
+}
+pre:hover {
   overflow: auto;
 }
 pre em {
@@ -48,6 +53,17 @@ pre em {
 table pre {
   margin: 0;
   height: 100%;
+}
+.console {
+  background: transparent;
+  border: none;
+}
+.console:before {
+  content: "> ";
+  color: #aaa;
+}
+.jsonv {
+  background: transparent;
 }
 code .params {
   color: #666;
