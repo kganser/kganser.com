@@ -53,6 +53,7 @@ pre em {
 table pre {
   margin: 0;
   height: 100%;
+  overflow: auto;
 }
 .console {
   background: transparent;
