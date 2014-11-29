@@ -42,10 +42,35 @@ pre {
   padding: 2px 5px;
   border: solid 1px #ddd;
   background: #f7f7f7;
-  overflow: hidden;
-}
-pre:hover {
   overflow: auto;
+}
+pre::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+pre::-webkit-scrollbar-button {
+  display: none;
+}
+pre::-webkit-scrollbar-corner {
+  background: transparent;
+}
+pre::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, .2);
+}
+pre::-webkit-scrollbar-track {
+  background-clip: padding-box;
+}
+pre::-webkit-scrollbar-track:hover {
+  background: rgba(0, 0, 0, .035);
+}
+pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, .4);
+}
+pre::-webkit-scrollbar-track:active {
+  background: rgba(0, 0, 0, .05);
+}
+pre::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, .5);
 }
 pre em {
   font-family: arial, helvetica, sans-serif;
@@ -53,7 +78,6 @@ pre em {
 table pre {
   margin: 0;
   height: 100%;
-  overflow: auto;
 }
 .console {
   background: transparent;
