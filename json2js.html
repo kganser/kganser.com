@@ -38,23 +38,21 @@
     <h1>json2js</h1>
     <p>Json2js cleans up JSON for use in javascript (ES5) code by removing unneeded quotes on keys, using literal unicode characters, and (optionally) adding indentation. Where necessary, quote characters around string keys and values can be exclusively single or double or preferably single or double. Preferred options minimize the number of escaped quotes in the string and use the preferred characters to break ties.</p>
     <div id="controls">
-      <label><select id="quote"><option value="ps" selected>Prefer single</option><option value="pd">Prefer double</option><option value="s">Use single</option><option value="d">Use double</option></select> quotes</label>
+      <label><select id="quote"><option value="sp" selected>Prefer single</option><option value="dp">Prefer double</option><option value="s">Use single</option><option value="d">Use double</option></select> quotes</label>
       <label><select id="indent"><option value="0">No</option><option value="1">1 space</option><option value="2" selected>2 space</option><option value="3">3 space</option><option value="4">4 space</option><option value="tab">Tab</option></select> indentation</label>
       <button id="convert">Convert</button>
     </div>
     <textarea id="input">{"string":"r\u00e4ksm\u00f6rg\u00e5s","number":123,"null":null,"object":{"key":"value"},"array":["element"]}</textarea><textarea id="output" disabled></textarea>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- Ad -->
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-8622334174094028"
          data-ad-slot="3949541287"
          data-ad-format="auto"></ins>
-    <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script src="/js/common.js"></script>
     <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
       (function(input, output, quote, indent) {
         var q, p, qq = function(value) {
           var quote = q;
@@ -69,20 +67,21 @@
         };
         $('convert').onclick = function() {
           var i = {0: '', 1: ' ', 2: '  ', 3: '   ', 4: '    ', tab: '\t'}[indent.value];
-          q = {ps: "'", pd: '"', s: "'", d: '"'}[quote.value];
-          p = quote.value[0] == 'p';
+          q = quote.value[0] == 's' ? "'" : '"';
+          p = quote.value[1] == 'p';
           output.className = '';
           try {
             output.textContent = function print(value, depth) {
-              var type = typeof value,
-                  indent = i ? '\n'+new Array(depth+1).join(i) : '';
+              var indent, type = typeof value;
               return type == 'string'
                 ? qq(value)
                 : !value || typeof value != 'object'
                   ? value
-                  : Array.isArray(value)
+                  : (indent = i ? '\n'+new Array(depth+1).join(i) : '', Array.isArray(value))
                     ? '['+value.map(function(elem) { return indent+i+print(elem, depth+1); }).join(',')+indent+']'
-                    : '{'+Object.keys(value).map(function(key) { return indent+i+(/^[a-z0-9_$]+$/i.test(key) ? key : qq(key))+(i ? ': ' : ':')+print(value[key], depth+1); }).join(',')+indent+'}';
+                    : '{'+Object.keys(value).map(function(key) {
+                        return indent+i+(/^[a-z0-9_$]+$/i.test(key) ? key : qq(key))+(i ? ': ' : ':')+print(value[key], depth+1);
+                      }).join(',')+indent+'}';
             }(JSON.parse(input.value), 0);
           } catch (e) {
             output.className = 'error';
