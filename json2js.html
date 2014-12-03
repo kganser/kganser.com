@@ -61,8 +61,11 @@
                 dbl = (value.match(/"/g) || []).length;
             if (sgl != dbl) quote = sgl > dbl ? '"' : "'";
           }
-          return quote+value.replace(/[\\\n"']/g, function(ch) {
-            return ch == quote || ch == '\\' || ch == '\n' ? '\\'+ch : ch;
+          return quote+value.replace(/[\\\r\n"']/g, function(ch) {
+            return ch == quote || ch == '\\' ? '\\'+ch
+              : ch == '\r' ? '\\r'
+              : ch == '\n' ? '\\n'
+              : ch;
           })+quote;
         };
         $('convert').onclick = function() {
