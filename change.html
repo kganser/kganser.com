@@ -55,7 +55,7 @@ var makeChange = function(amount) {
       <input type="submit" value="Make change">
       <span id="greedy-change"></span>
     </form>
-    <p>Characteristically, this algorithm makes the locally optimal choice on each iteration. Using American currency (and most others), it is in fact the optimal solution, in that it always returns change using the fewest coins. The algorithm for distinguishing so-called <em>canonical</em> coin denominations is described by <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.57.3243&rep=rep1&type=pdf">David Pearson</a>.</p>
+    <p>Characteristically, this algorithm makes the locally optimal choice on each iteration. Using American currency (and most others), it is in fact the optimal solution, in that it always returns change using the fewest coins. The algorithm for distinguishing so-called <em>canonical</em> coin denominations where the greedy algorithm is optimal is described by <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.57.3243&rep=rep1&type=pdf">David Pearson</a>.</p>
     <p>However, the greedy algorithm is not optimal for all denominations. For example, if the nickel were replaced by a 6&cent; coin, change in the amount of 12&cent; would consist of 10&cent;, 1&cent;, 1&cent; rather than the optimal 6&cent;, 6&cent;. Further, if the penny were removed, the greedy algorithm would not generate exact change at all, even though it is possible to do so.</p>
     <p>The general solution is one that accounts for the possibility that the locally optimal choice (i.e., the right coin at a given iteration) is not globally optimal (i.e., the right coin for a given amount). It does this by comparing each choice of coins at each iteration. However, what distinguishes this approach from the exponential-time brute force algorithm is that intermediate results are cached (a.k.a. <a href="http://en.wikipedia.org/wiki/Memoization">memoized</a>).  Below is a curried implementation of the dynamic programming algorithm that generates change using the given denominations for a given amount.</a>
     <pre class="prettyprint">
@@ -83,50 +83,56 @@ var makeChange = function(coins) {
       <input type="submit" value="Make change">
       <span id="dynamic-change"></span>
     </form>
-    <p>Below is a trace of the recursive calls required by the solution to make 12&cent; in change using denominations of 1&cent;, 6&cent;, 10&cent; (traversed in that order). Each call assumes an optimal value of 1 + the lowest optimal value of the recursive calls invoked with the remaining amount. Click on the stack to apply dynamic programming's memoization.</p>
+    <p>Below is a trace of the recursive calls required by the solution to make 12&cent; in change using denominations of 1&cent;, 6&cent;, 10&cent; (traversed in that order). Each call assumes an optimal value of one of these coins + the optimal change for the remaining amount, recursively. Click on the stack to apply dynamic programming's memoization.</p>
     <pre id="stack">
 change(12)                        => 2 coins optimal (6&cent; 6&cent;)
-  change(11)                      => 6 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent; 6&cent;)
-    change(10)                    => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 6&cent;)
-      change(9)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 6&cent;)
-        change(8)                 => 3 coins optimal (1&cent; 1&cent; 6&cent;)
-          change(7)               => 2 coins optimal (1&cent; 6&cent;)
-            change(6)             => 1 coin  optimal (6&cent;)
-              change(5)           => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;)
-                change(4)         => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
-                  change(3)       => 3 coins optimal (1&cent; 1&cent; 1&cent;)
-                    change(2)     => 2 coins optimal (1&cent; 1&cent;)
-                      change(1)   => 1 coin  optimal (1&cent;)
-                        change(0) => 0 coins optimal
-              change(0)           => 0 coins optimal
-            change(1)             => 1 coin  optimal (1&cent;)             <span>(cached)</span>
-<div>              change(0)           => 0 coins optimal
-</div>          change(2)               => 2 coins optimal (1&cent; 1&cent;)          <span>(cached)</span>
-<div>            change(1)             => 1 coin  optimal (1&cent;)
-              change(0)           => 0 coins optimal
-</div>        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)       <span>(cached)</span>
-<div>          change(2)               => 2 coins optimal (1&cent; 1&cent;)
-            change(1)             => 1 coin  optimal (1&cent;)
-              change(0)           => 0 coins optimal
-</div>      change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)    <span>(cached)</span>
-<div>        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
-          change(2)               => 2 coins optimal (1&cent; 1&cent;)
-            change(1)             => 1 coin  optimal (1&cent;)
-              change(0)           => 0 coins optimal
-</div>    change(5)                     => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;) <span>(cached)</span>
-<div>      change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
-        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
-          change(2)               => 2 coins optimal (1&cent; 1&cent;)
-            change(1)             => 1 coin  optimal (1&cent;)
-              change(0)           => 0 coins optimal
-</div>  change(6)                       => 1 coin  optimal (6&cent;)             <span>(cached)</span>
-<div>    change(5)                     => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;)
-      change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
-        change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
-          change(2)               => 2 coins optimal (1&cent; 1&cent;)
-            change(1)             => 1 coin  optimal (1&cent;)
-              change(0)           => 0 coins optimal
-</div>    change(0)                     => 0 coins optimal</pre>
+├ change(11)                      => 2 coins optimal (1&cent; 10&cent;)
+│ ├ change(10)                    => 1 coin  optimal (10&cent;)
+│ │ ├ change(9)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 6&cent;)
+│ │ │ ├ change(8)                 => 3 coins optimal (1&cent; 1&cent; 6&cent;)
+│ │ │ │ ├ change(7)               => 2 coins optimal (1&cent; 6&cent;)
+│ │ │ │ │ ├ change(6)             => 1 coin  optimal (6&cent;)
+│ │ │ │ │ │ ├ change(5)           => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;)
+│ │ │ │ │ │ │ └ change(4)         => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
+│ │ │ │ │ │ │   └ change(3)       => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+│ │ │ │ │ │ │     └ change(2)     => 2 coins optimal (1&cent; 1&cent;)
+│ │ │ │ │ │ │       └ change(1)   => 1 coin  optimal (1&cent;)
+│ │ │ │ │ │ │         └ change(0) => 0 coins optimal
+│ │ │ │ │ │ └ change(0)           => 0 coins optimal
+│ │ │ │ │ └ change(1)             => 1 coin  optimal (1&cent;)             <span>(cached)</span>
+<div>│ │ │ │ │   └ change(0)           => 0 coins optimal
+</div>│ │ │ │ └ change(2)               => 2 coins optimal (1&cent; 1&cent;)          <span>(cached)</span>
+<div>│ │ │ │   └ change(1)             => 1 coin  optimal (1&cent;)
+│ │ │ │     └ change(0)           => 0 coins optimal
+</div>│ │ │ └ change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)       <span>(cached)</span>
+<div>│ │ │   └ change(2)               => 2 coins optimal (1&cent; 1&cent;)
+│ │ │     └ change(1)             => 1 coin  optimal (1&cent;)
+│ │ │       └ change(0)           => 0 coins optimal
+</div>│ │ ├ change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)    <span>(cached)</span>
+<div>│ │ │ └ change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+│ │ │   └ change(2)               => 2 coins optimal (1&cent; 1&cent;)
+│ │ │     └ change(1)             => 1 coin  optimal (1&cent;)
+│ │ │       └ change(0)           => 0 coins optimal
+</div>│ │ └ change(0)                   => 0 coins optimal
+│ ├ change(5)                     => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;) <span>(cached)</span>
+<div>│ │ └ change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
+│ │   └ change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+│ │     └ change(2)               => 2 coins optimal (1&cent; 1&cent;)
+│ │       └ change(1)             => 1 coin  optimal (1&cent;)
+│ │         └ change(0)           => 0 coins optimal
+</div>│ └ change(1)                     => 1 coin  optimal (1&cent;)             <span>(cached)</span>
+<div>│   └ change(0)                   => 0 coins optimal
+</div>├ change(6)                       => 1 coin  optimal (6&cent;)             <span>(cached)</span>
+<div>│ ├ change(5)                     => 5 coins optimal (1&cent; 1&cent; 1&cent; 1&cent; 1&cent;)
+│ │ └ change(4)                   => 4 coins optimal (1&cent; 1&cent; 1&cent; 1&cent;)
+│ │   └ change(3)                 => 3 coins optimal (1&cent; 1&cent; 1&cent;)
+│ │     └ change(2)               => 2 coins optimal (1&cent; 1&cent;)
+│ │       └ change(1)             => 1 coin  optimal (1&cent;)
+│ │         └ change(0)           => 0 coins optimal
+│ └ change(0)                     => 0 coins optimal
+</div>└ change(2)                       => 2 coins optimal (1&cent; 1&cent;)          <span>(cached)</span>
+<div>  └ change(1)                     => 1 coin  optimal (1&cent;)
+    └ change(0)                   => 0 coins optimal</div></pre>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- Ad -->
     <ins class="adsbygoogle"
