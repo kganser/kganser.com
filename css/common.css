@@ -7,7 +7,7 @@ body {
 }
 a {
   text-decoration: none;
-  color: #33c;
+  color: #00c;
 }
 a:hover {
   text-decoration: underline;
@@ -41,7 +41,7 @@ h3 {
   color: #999;
 }
 .contact a:hover {
-  color: #33c;
+  color: #00c;
 }
 svg {
   width: 20px;
