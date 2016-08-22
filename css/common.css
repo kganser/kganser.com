@@ -1,14 +1,13 @@
 body {
   margin: 15px auto 0 auto;
   padding: 0 10px;
-  font-family: arial, helvetica, sans-serif;
-  font-size: 15px;
+  font: 15px sans-serif;
   max-width: 800px;
   -webkit-text-size-adjust: none;
 }
 a {
   text-decoration: none;
-  color: #a11;
+  color: #33c;
 }
 a:hover {
   text-decoration: underline;
@@ -16,24 +15,110 @@ a:hover {
 p, li {
   line-height: 1.3;
 }
+h1, h2 {
+  display: none;
+}
+h3 {
+  margin: 10px 0 5px;
+  font-size: inherit;
+  color: black;
+}
 .profile {
-  margin: -15px -10px 0 -10px;
+  font-size: 24px;
+  color: #666;
+  text-align: center;
 }
-.profile p {
-  border: solid 1px #ddd;
-  background: #f7f7f7;
-  padding: 10px;
-  margin-top: 0;
+.profile span {
+  font-weight: bold;
+  color: black;
 }
-h1 {
-  margin-top: 5px;
+.contact {
+  text-align: center;
 }
-.profile h1 {
-  text-indent: -999px;
-  overflow: hidden;
-  height: 60px;
-  margin: 0;
-  background: url(/img/monochrome.png) no-repeat right;
+.contact a {
+  display: inline-block;
+  margin: 0 5px;
+  color: #999;
+}
+.contact a:hover {
+  color: #33c;
+}
+svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.projects {
+  margin-left: -80px;
+  font-size: 0;
+  text-align: center;
+}
+a.project {
+  display: inline-block;
+  width: 350px;
+  max-width: 82.6%;
+  min-height: 195px;
+  margin: 20px 0 20px 80px;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.3;
+  text-align: left;
+}
+a.project:hover {
+  text-decoration: none;
+}
+a.project:hover h3 {
+  text-decoration: underline;
+}
+.project:before {
+  content: "";
+  display: block;
+  height: 100px;
+}
+.project.simpljs:before {
+  background: url(/img/simpljs.png) left top / 440px no-repeat;
+}
+.project.docjs:before {
+  background: url(/img/docjs.png) -5px -48px no-repeat;
+}
+.project.jscc:before {
+  background: url(/img/jscc.png) left 2px no-repeat;
+}
+.project.jsml:before {
+  background: url(/img/jsml.png) left -15px no-repeat;
+}
+.project.jsonv:before {
+  background: url(/img/jsonv.png) -24px -100px no-repeat;
+}
+.project.jsontable:before {
+  background: url(/img/jsontable.png) -1px -1px no-repeat;
+}
+.project.objectdb:before {
+  background: url(/img/objectdb.png) left -3px no-repeat;
+}
+.project.datauri:before {
+  background: url(/img/datauri.png) left top no-repeat;
+}
+.project.json2js:before {
+  background: url(/img/json2js.png) left top no-repeat;
+}
+.project.deviceart:before {
+  background: url(/img/deviceart.png) left top / 350px no-repeat;
+}
+.project.webexec:before {
+  background: url(/img/webexec.png) -55px -50px / 897px no-repeat;
+}
+.project.timesheet:before {
+  background: url(/img/timesheet.png) left top / 350px no-repeat;
+}
+.project.charge:before {
+  background: url(/img/charge-iphone-1.png) -50px -450px / 450px no-repeat;
+}
+.project.redict:before {
+  background: url(/img/redict.png) left -33px no-repeat;
+}
+.project.worldcup:before {
+  background: url(/img/world-cup.png) -8px top no-repeat;
 }
 code, pre {
   font-size: 13px;
