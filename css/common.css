@@ -55,8 +55,9 @@ svg {
 }
 a.project {
   display: inline-block;
+  vertical-align: top;
   width: 350px;
-  max-width: 82.6%;
+  max-width: 76.9%;
   min-height: 195px;
   margin: 20px 0 20px 80px;
   color: #666;
