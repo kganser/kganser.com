@@ -75,6 +75,7 @@ a.project:hover h3 {
   content: "";
   display: block;
   height: 100px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,.3);
 }
 .project.simpljs:before {
   background: url(/img/simpljs.png) left top / 440px no-repeat;
@@ -83,34 +84,34 @@ a.project:hover h3 {
   background: url(/img/docjs.png) -5px -48px no-repeat;
 }
 .project.jscc:before {
-  background: url(/img/jscc.png) left 2px no-repeat;
+  background: url(/img/jscc.png) 5px 2px no-repeat;
 }
 .project.jsml:before {
   background: url(/img/jsml.png) left -15px no-repeat;
 }
-.project.jsonv:before {
-  background: url(/img/jsonv.png) -24px -100px no-repeat;
-}
 .project.jsontable:before {
   background: url(/img/jsontable.png) -1px -1px no-repeat;
 }
-.project.objectdb:before {
-  background: url(/img/objectdb.png) left -3px no-repeat;
-}
-.project.datauri:before {
-  background: url(/img/datauri.png) left top no-repeat;
-}
-.project.json2js:before {
-  background: url(/img/json2js.png) left top no-repeat;
-}
-.project.deviceart:before {
-  background: url(/img/deviceart.png) left top / 350px no-repeat;
+.project.jsonv:before {
+  background: url(/img/jsonv.png) -20px -100px no-repeat;
 }
 .project.webexec:before {
   background: url(/img/webexec.png) -55px -50px / 897px no-repeat;
 }
+.project.objectdb:before {
+  background: url(/img/objectdb.png) left -3px no-repeat;
+}
 .project.timesheet:before {
   background: url(/img/timesheet.png) left top / 350px no-repeat;
+}
+.project.datauri:before {
+  background: url(/img/datauri.png) left top no-repeat;
+}
+.project.deviceart:before {
+  background: url(/img/deviceart.png) left top / 350px no-repeat;
+}
+.project.json2js:before {
+  background: url(/img/json2js.png) left top no-repeat;
 }
 .project.charge:before {
   background: url(/img/charge-iphone-1.png) -50px -450px / 450px no-repeat;
