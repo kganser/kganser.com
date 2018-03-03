@@ -23,6 +23,13 @@ h3 {
   font-size: inherit;
   color: black;
 }
+pre, code, tt {
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+pre {
+  line-height: 16px;
+}
 .home {
   text-align: center;
 }
@@ -79,52 +86,52 @@ a.project:hover h3 {
   box-shadow: inset 0 0 10px rgba(0,0,0,.3);
 }
 .project.simpljs:before {
-  background: url(/img/simpljs.png) left top / 440px no-repeat;
+  background: url(../img/simpljs.png) left top / 440px no-repeat;
 }
 .project.docjs:before {
-  background: url(/img/docjs.png) -5px -48px no-repeat;
+  background: url(../img/docjs.png) -5px -48px no-repeat;
 }
 .project.jscc:before {
-  background: url(/img/jscc.png) 5px 2px no-repeat;
+  background: url(../img/jscc.png) 5px 2px no-repeat;
 }
 .project.jsml:before {
-  background: url(/img/jsml.png) left -15px no-repeat;
+  background: url(../img/jsml.png) left -15px no-repeat;
 }
 .project.jsontable:before {
-  background: url(/img/jsontable.png) -1px -1px no-repeat;
+  background: url(../img/jsontable.png) -1px -1px no-repeat;
 }
 .project.jsonv:before {
-  background: url(/img/jsonv.png) -20px -100px no-repeat;
+  background: url(../img/jsonv.png) -20px -100px no-repeat;
 }
 .project.webexec:before {
-  background: url(/img/webexec.png) -55px -50px / 897px no-repeat;
+  background: url(../img/webexec.png) -55px -50px / 897px no-repeat;
 }
 .project.objectdb:before {
-  background: url(/img/objectdb.png) left -3px no-repeat;
+  background: url(../img/objectdb.png) left -3px no-repeat;
 }
 .project.timesheet:before {
-  background: url(/img/timesheet.png) left top / 350px no-repeat;
+  background: url(../img/timesheet.png) left top / 350px no-repeat;
 }
 .project.datauri:before {
-  background: url(/img/datauri.png) left top no-repeat;
+  background: url(../img/datauri.png) left top no-repeat;
 }
 .project.deviceart:before {
-  background: url(/img/deviceart.png) left top / 350px no-repeat;
+  background: url(../img/deviceart.png) left top / 350px no-repeat;
 }
 .project.json2js:before {
-  background: url(/img/json2js.png) left top no-repeat;
+  background: url(../img/json2js.png) left top no-repeat;
 }
 .project.charge:before {
-  background: url(/img/charge-iphone-1.png) -50px -450px / 450px no-repeat;
+  background: url(../img/charge-iphone-1.png) -50px -450px / 450px no-repeat;
 }
 .project.redict:before {
-  background: url(/img/redict.png) left -33px no-repeat;
+  background: url(../img/redict.png) left -33px no-repeat;
 }
 .project.worldcup:before {
-  background: url(/img/world-cup.png) -8px top no-repeat;
+  background: url(../img/world-cup.png) -8px top no-repeat;
 }
 code, pre {
-  font-size: 13px;
+  font: 12px/15px SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 pre {
   padding: 2px 5px;
@@ -205,15 +212,4 @@ code .params {
 .adsbygoogle {
   margin-top: 30px;
   overflow: hidden;
-}
-@media only screen and (-webkit-min-device-pixel-ratio: 2) {
-  .git-banner {
-    width: 75px;
-    height: 75px;
-    background-size: 75px 75px;
-  }
-  .profile h1 {
-    background-size: 302px 171px;
-    height: 30px;
-  }
 }
