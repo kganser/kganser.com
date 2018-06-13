@@ -27,9 +27,17 @@
       position: absolute;
       border: solid 1px #ececec;
     }
-    .game dl::before {
+    .game .group::before {
       display: block;
       color: #999;
+    }
+    .game .group:hover::after {
+      content: "Pick 2";
+      font-size: 12px;
+      color: #999;
+      position: absolute;
+      top: 2px;
+      right: 5px;
     }
     .game dd {
       margin: 0;
@@ -268,7 +276,7 @@
       
       jsml([
         'abcdefgh'.split('').map(function(group, i) {
-          return {dl: {className: 'group-'+group, children: teams[i].map(function(team, j) {
+          return {dl: {className: 'group group-'+group, children: teams[i].map(function(team, j) {
             return {dd: {
               onclick: function() { pick(i, j); },
               children: function(e) {
