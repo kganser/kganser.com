@@ -31,14 +31,6 @@
       display: block;
       color: #999;
     }
-    .game .group:hover::after {
-      content: "Pick 2";
-      font-size: 12px;
-      color: #999;
-      position: absolute;
-      top: 2px;
-      right: 5px;
-    }
     .game dd {
       margin: 0;
       cursor: pointer;
@@ -201,6 +193,16 @@
     }
     .reset {
       background-color: #666;
+    }
+    @media (pointer: fine) {
+      .game .group:hover::after {
+        content: "Pick 2";
+        font-size: 12px;
+        color: #999;
+        position: absolute;
+        top: 2px;
+        right: 5px;
+      }
     }
   </style>
 </head>
