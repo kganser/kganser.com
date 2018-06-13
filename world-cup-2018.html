@@ -1,0 +1,324 @@
+<!doctype html>
+<html>
+<head>
+  <title>World Cup Bracket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta property="og:description" content="Fill out and share your Brazil 2014 World Cup Bracket">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="http://kganser.com/img/world-cup-2018.png">
+  <meta property="og:url" content="http://kganser.com/world-cup-2018">
+  <meta property="og:site_name" content="kganser.com">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+    }
+    .game {
+      position: relative;
+      height: 386px;
+      min-width: 1192px;
+    }
+    .game dl {
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 130px;
+      padding: 2px 5px 5px;
+      position: absolute;
+      border: solid 1px #ececec;
+    }
+    .game dl::before {
+      display: block;
+      color: #999;
+    }
+    .game dd {
+      margin: 0;
+      cursor: pointer;
+      margin-top: 3px;
+      line-height: 20px;
+      min-height: 20px;
+    }
+    .game dd::before {
+      color: #999;
+      font-weight: normal;
+      display: inline-block;
+      width: 1.8em;
+    }
+    .game .winner {
+      font-weight: bold;
+    }
+    .game dd span span {
+      display: inline-block;
+      vertical-align: bottom;
+      width: 30px;
+      height: 20px;
+      margin-right: 5px;
+      background: url(/img/world-cup-2018-flags.png) no-repeat top center / 32px 1024px;
+    }
+    .game .russia       { background-position-y: -38px; }
+    .game .saudi-arabia { background-position-y: -518px; }
+    .game .egypt        { background-position-y: -70px; }
+    .game .uruguay      { background-position-y: -102px; }
+    .game .portugal     { background-position-y: -134px; }
+    .game .spain        { background-position-y: -166px; }
+    .game .morocco      { background-position-y: -198px; }
+    .game .iran         { background-position-y: -230px; }
+    .game .france       { background-position-y: -262px; }
+    .game .australia    { background-position-y: -294px; }
+    .game .peru         { background-position-y: -326px; }
+    .game .denmark      { background-position-y: -358px; }
+    .game .argentina    { background-position-y: -390px; }
+    .game .iceland      { background-position-y: -422px; }
+    .game .croatia      { background-position-y: -454px; }
+    .game .nigeria      { background-position-y: -486px; }
+    .game .brazil       { background-position-y: -6px; }
+    .game .switzerland  { background-position-y: -550px; }
+    .game .costa-rica   { background-position-y: -582px; }
+    .game .serbia       { background-position-y: -614px; }
+    .game .germany      { background-position-y: -646px; }
+    .game .mexico       { background-position-y: -678px; }
+    .game .sweden       { background-position-y: -710px; }
+    .game .south-korea  { background-position-y: -742px; }
+    .game .belgium      { background-position-y: -774px; }
+    .game .panama       { background-position-y: -806px; }
+    .game .tunisia      { background-position-y: -838px; }
+    .game .england      { background-position-y: -870px; }
+    .game .poland       { background-position-y: -902px; }
+    .game .senegal      { background-position-y: -934px; }
+    .game .colombia     { background-position-y: -966px; }
+    .game .japan        { background-position-y: -998px; }
+    .group-a::before { content: "Group A"; }
+    .group-b::before { content: "Group B"; }
+    .group-c::before { content: "Group C"; }
+    .group-d::before { content: "Group D"; }
+    .group-e::before { content: "Group E"; }
+    .group-f::before { content: "Group F"; }
+    .group-g::before { content: "Group G"; }
+    .group-h::before { content: "Group H"; }
+    .match-0 dd:first-child:before { content: "A1 "; }
+    .match-0 dd:last-child:before  { content: "B2 "; }
+    .match-1 dd:first-child:before { content: "B1 "; }
+    .match-1 dd:last-child:before  { content: "A2 "; }
+    .match-2 dd:first-child:before { content: "C1 "; }
+    .match-2 dd:last-child:before  { content: "D2 "; }
+    .match-3 dd:first-child:before { content: "D1 "; }
+    .match-3 dd:last-child:before  { content: "C2 "; }
+    .match-4 dd:first-child:before { content: "E1 "; }
+    .match-4 dd:last-child:before  { content: "F2 "; }
+    .match-5 dd:first-child:before { content: "F1 "; }
+    .match-5 dd:last-child:before  { content: "E2 "; }
+    .match-6 dd:first-child:before { content: "G1 "; }
+    .match-6 dd:last-child:before  { content: "H2 "; }
+    .match-7 dd:first-child:before { content: "H1 "; }
+    .match-7 dd:last-child:before  { content: "G2 "; }
+    .match-14::before { content: "Final"; }
+    .match-15::before { content: "Third Place"; }
+    .group-c, .group-d, .match-2, .match-3 {
+      top: 130px;
+    }
+    .group-e, .group-f, .match-4, .match-5, .match-10, .match-11 {
+      top: 260px;
+    }
+    .group-g, .group-h, .match-6, .match-7 {
+      top: 390px;
+    }
+    .group-b, .group-d, .group-f, .group-h {
+      right: 0;
+    }
+    .match-0, .match-2, .match-4, .match-6 {
+      left: 150px;
+    }
+    .match-1, .match-3, .match-5, .match-7 {
+      right: 150px;
+    }
+    .match-8, .match-10 {
+      left: 300px;
+    }
+    .match-9, .match-11 {
+      right: 300px;
+    }
+    .match-12 {
+      left: 450px;
+    }
+    .match-13 {
+      right: 450px;
+    }
+    dl.match-14, dl.match-15 {
+      margin: 0 auto;
+      top: 380px;
+      left: 0;
+      right: 0;
+    }
+    dl.match-14 {
+      top: 280px;
+      border-style: double;
+      border-width: 3px;
+    }
+    .share {
+      position: absolute;
+      top: 100px;
+      left: 0;
+      right: 0;
+      width: 350px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .share header {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .share div, .reset {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 5px 10px;
+      margin: 3px;
+      cursor: pointer;
+    }
+    .url {
+      display: block;
+      color: black;
+      text-decoration: none;
+      padding: 2px 5px;
+      margin: 3px;
+      border: solid 1px #ececec;
+      display: none;
+    }
+    .facebook {
+      background-color: #3b5998;
+    }
+    .twitter {
+      background-color: #55acee;
+    }
+    .reset {
+      background-color: #666;
+    }
+  </style>
+</head>
+<body>
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- Ad -->
+  <ins class="adsbygoogle"
+       style="display:block; margin-bottom: 10px; text-align: center;"
+       data-ad-client="ca-pub-8622334174094028"
+       data-ad-slot="3949541287"
+       data-ad-format="horizontal"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <div class="game"></div>
+  <script src="/js/common.js"></script>
+  <script src="http://jsml.kganser.com/jsml.js"></script>
+  <script>
+    (function() {
+      var picks = [], elems = [], remaining = 32, url = 'http://kganser.com/world-cup-2018', link,
+          span = function(range) { return new Array(range+1).join(' ').split(''); },
+          paths = [32, 35, 34, 33, 36, 39, 38, 37, 40, 43, 42, 41, 44, 47, 46, 45, 48, 50, 49, 51, 52, 54, 53, 55, 56, 58, 57, 59, 60, 61, 62, 63],
+          teams = [
+            ['Russia', 'Saudi Arabia', 'Egypt', 'Uruguay'],
+            ['Portugal', 'Spain', 'Morocco', 'Iran'],
+            ['France', 'Australia', 'Peru', 'Denmark'],
+            ['Argentina', 'Iceland', 'Croatia', 'Nigeria'],
+            ['Brazil', 'Switzerland', 'Costa Rica', 'Serbia'],
+            ['Germany', 'Mexico', 'Sweden', 'South Korea'],
+            ['Belgium', 'Panama', 'Tunisia', 'England'],
+            ['Poland', 'Senegal', 'Colombia', 'Japan']];
+      
+      var pick = function(group, value) {
+        if (value == null) return;
+        if (group < 8) {
+          var i = group*2;
+          if (picks[i+1] == value) i++;
+          if (picks[i] == value) {
+            remaining++;
+            picks[i] = null;
+            elems[group*4+value].className = '';
+            elems[paths[i]].innerHTML = '';
+            pick(paths[i]/2-8 << 0, picks[paths[i]/2 << 0]); // propagate
+          } else if (picks[i] == null || picks[i+1] == null) {
+            remaining--;
+            picks[picks[i] == null ? i : ++i] = value;
+            elems[group*4+value].className = 'winner';
+            elems[paths[i]].innerHTML = elems[group*4+value].innerHTML;
+            pick(paths[i]/2-8 << 0, picks[paths[i]/2 << 0]); // propagate
+          }
+        } else {
+          var i = group+8,
+              winner = elems[group*2+16+value],
+              loser = elems[group*2+17-value];
+          if (picks[i] == null) remaining--;
+          picks[i] = value;
+          winner.className = 'winner';
+          loser.className = '';
+          if (group < 22) {
+            elems[paths[i]].innerHTML = winner.innerHTML;
+            if (group > 19) {
+              elems[paths[i+2]].innerHTML = loser.innerHTML;
+            } else {
+              pick(paths[i]/2-8 << 0, picks[paths[i]/2 << 0]); // propagate
+            }
+          }
+        }
+        if (!remaining) {
+          document.location.hash = span(12).map(function(x, i) {
+            return (i < 8
+              ? picks[i*2] << 2 | picks[i*2+1]
+              : picks.slice((i-8)*4+16, (i-8)*4+20).map(function(pick, i) { return pick << i; }).reduce(function(a, b) { return a | b; }, 0)
+            ).toString(16);
+          }).join('');
+          link.href = url = 'http://kganser.com/world-cup-2018'+document.location.hash;
+          link.innerHTML = url.substr(7);
+          link.style.display = 'block';
+        } else {
+          document.location.hash = '';
+          link.style.display = 'none';
+        }
+      };
+      
+      jsml([
+        'abcdefgh'.split('').map(function(group, i) {
+          return {dl: {className: 'group-'+group, children: teams[i].map(function(team, j) {
+            return {dd: {
+              onclick: function() { pick(i, j); },
+              children: function(e) {
+                elems.push(e);
+                return {span: [{span: {className: team.toLowerCase().replace(' ', '-')}}, team]};
+              }
+            }};
+          })}};
+        }),
+        span(16).map(function(group, i) {
+          return {dl: {className: 'match-'+i, children: [
+            {dd: {onclick: function() { pick(i+8, 0); }, children: function(e) { elems.push(e); }}},
+            {dd: {onclick: function() { pick(i+8, 1); }, children: function(e) { elems.push(e); }}}
+          ]}};
+        }),
+        {div: {className: 'share', children: [
+          {header: 'World Cup 2018'},
+          {div: {className: 'facebook', onclick: function() { open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url), 'share', 'width=600, height=300'); }, children: 'Share'}},
+          {div: {className: 'twitter', onclick: function() { open('https://twitter.com/intent/tweet?text='+encodeURIComponent(url), 'share', 'width=600, height=300'); }, children: 'Tweet'}},
+          {a: {className: 'url', children: function(e) { link = e; }}},
+          {a: {className: 'reset', href: url, children: 'Reset'}}
+        ]}}
+      ], document.getElementsByClassName('game')[0]);
+      
+      if (/^#[0-9a-f]{12}/i.test(document.location.hash)) {
+        document.location.hash.substr(1, 12).split('').forEach(function(digit, i) {
+          digit = parseInt(digit, 16);
+          if (i < 8) {
+            pick(i, digit >> 2);
+            pick(i, digit & 3);
+          } else {
+            i = i*4-24;
+            pick(i, digit & 1);
+            pick(i+1, digit >> 1 & 1);
+            pick(i+2, digit >> 2 & 1);
+            pick(i+3, digit >> 3);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
