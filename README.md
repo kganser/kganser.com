@@ -1,1 +1,1 @@
-See <http://kganser.com>.
+See <https://kganser.com>.
