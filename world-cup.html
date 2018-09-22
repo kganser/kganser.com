@@ -268,7 +268,7 @@
             ).toString(16);
           }).join('');
           link.href = url = 'https://kganser.com/world-cup'+document.location.hash;
-          link.innerHTML = url.substr(7);
+          link.innerHTML = url.split('//')[1];
           link.style.display = 'block';
         } else {
           document.location.hash = '';
