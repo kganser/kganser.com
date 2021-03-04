@@ -128,7 +128,7 @@ a.project:hover h3 {
   background: url(../img/redict.png) left -33px no-repeat;
 }
 .project.worldcup:before {
-  background: url(../img/world-cup-2018.png) left top no-repeat / 1208px;
+  background: url(../img/world-cup-2018.png) left top / 1208px no-repeat;
 }
 code, pre {
   font: 12px/15px SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
