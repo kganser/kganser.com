@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kganser.com - interest rate converter</title>
+    <meta charset="utf-8">
+    <meta name="description" content="A tool for converting interest rates with different compounding periods.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+      #converter {
+        font-size: 0;
+        margin-top: 3rem;
+      }
+      input[name=rate] {
+        font-size: 3rem;
+        text-align: center;
+        color: #00c;
+        width: 100%;
+        padding: 0 50px;
+        display: block;
+        border: 0;
+        padding: 0;
+        outline: none;
+      }
+      #conversion {
+        font-size: 3rem;
+        text-align: center;
+        padding: 0 50px;
+        overflow: auto;
+      }
+      .label {
+        margin-bottom: 1rem;
+      }
+      .from, .to {
+        display: inline-block;
+        vertical-align: top;
+        width: 50%;
+        font-size: 15px;
+        text-align: center;
+      }
+      .equals {
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        width: 100px;
+        margin: 0 -50px;
+        font-size: 15px;
+        text-align: center;
+      }
+      .equals div {
+        font-size: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/">kganser.com</a>
+    <h1>interest rate converter</h1>
+    <p>Use this tool to convert interest rates at different compounding periods.</p>
+    <form id="converter">
+      <div class="from">
+        <label>
+          <input name="rate" value="10" autofocus>
+          <div class="label">% annual</div>
+        </label>
+        <div>compounded
+          <select name="from_period">
+            <option value="annual" selected>annually</option>
+            <option value="monthly">monthly</option>
+            <option value="daily">daily</option>
+            <option value="continuous">continuously</option>
+          </select>
+        </div>
+      </div>
+      <div class="equals">
+        <div>=</div>
+        <button>Convert</button>
+      </div>
+      <div class="to">
+        <div>
+          <div id="conversion"></div>
+          <div class="label">% annual</div>
+        </div>
+        <div>compounded
+          <select name="to_period">
+            <option value="annual">annually</option>
+            <option value="monthly">monthly</option>
+            <option value="daily" selected>daily</option>
+            <option value="continuous">continuously</option>
+          </select>
+        </div>
+      </div>
+    </form>
+    <script src="js/common.js"></script>
+    <script>
+      (function() {
+        var form = $('converter');
+        var result = $('conversion');
+        var periods = {
+          annual: 1,
+          monthly: 12,
+          daily: 365
+        };
+        var convert = function() {
+          var rate = parseFloat(form.rate.value) / 100;
+          if (isNaN(rate)) {
+            result.innerText = '?';
+            return;
+          }
+          var fromPeriod = periods[form.from_period.value];
+          var toPeriod = periods[form.to_period.value];
+          var yld = fromPeriod
+            ? Math.pow((1 + rate / fromPeriod), fromPeriod)
+            : Math.exp(rate);
+          var value = toPeriod ? (Math.exp(Math.log(yld) / toPeriod) - 1) * toPeriod : Math.log(yld);
+          result.innerText = Math.round(value * 10000000) / 100000;
+        };
+        $('converter').onsubmit = function(e) {
+          e.preventDefault();
+          convert();
+        };
+        convert();
+      })();
+    </script>
+  </body>
+</html>

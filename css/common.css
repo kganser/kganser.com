@@ -112,6 +112,9 @@ a.project:hover h3 {
 .project.timesheet:before {
   background: url(../img/timesheet.png) left top / 350px no-repeat;
 }
+.project.interest:before {
+  background: url(../img/interest.png) center / 350px no-repeat;
+}
 .project.datauri:before {
   background: url(../img/datauri.png) left top no-repeat;
 }
