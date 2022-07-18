@@ -9,7 +9,7 @@
     <style>
       #converter {
         font-size: 0;
-        margin-top: 3rem;
+        margin: 3rem -10px 0;
       }
       input[name=rate] {
         font-size: 3rem;
@@ -25,8 +25,8 @@
       #conversion {
         font-size: 3rem;
         text-align: center;
-        margin-left: 50px;
-        padding-right: 50px;
+        margin-left: 20px;
+        padding: 0 50px 0 30px;
         overflow: auto;
       }
       .label {
@@ -66,6 +66,8 @@
         <div>compounded
           <select name="from_period">
             <option value="annual" selected>annually</option>
+            <option value="semiannual">semiannually</option>
+            <option value="quarterly">quarterly</option>
             <option value="monthly">monthly</option>
             <option value="daily">daily</option>
             <option value="continuous">continuously</option>
@@ -84,6 +86,8 @@
         <div>compounded
           <select name="to_period">
             <option value="annual">annually</option>
+            <option value="semiannual">semiannually</option>
+            <option value="quarterly">quarterly</option>
             <option value="monthly">monthly</option>
             <option value="daily" selected>daily</option>
             <option value="continuous">continuously</option>
@@ -98,6 +102,8 @@
         var result = $('conversion');
         var periods = {
           annual: 1,
+          semiannual: 2,
+          quarterly: 4,
           monthly: 12,
           daily: 365
         };
@@ -112,7 +118,9 @@
           var yld = fromPeriod
             ? Math.pow((1 + rate / fromPeriod), fromPeriod)
             : Math.exp(rate);
-          var value = toPeriod ? (Math.exp(Math.log(yld) / toPeriod) - 1) * toPeriod : Math.log(yld);
+          var value = toPeriod
+            ? (Math.exp(Math.log(yld) / toPeriod) - 1) * toPeriod
+            : Math.log(yld);
           result.innerText = Math.round(value * 10000000) / 100000;
         };
         $('converter').onsubmit = function(e) {
